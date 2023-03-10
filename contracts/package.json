@@ -1,0 +1,23 @@
+{
+  "name": "publius",
+  "version": "1.0.0",
+  "description": "Publius - Publishing as a public good.  100% on-chain, permissionless. Free.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sekaieth/publius.git"
+  },
+  "author": "sekaieth",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/sekaieth/publius/issues"
+  },
+  "homepage": "https://github.com/sekaieth/publius#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "hardhat": "^2.13.0"
+  }
+}
