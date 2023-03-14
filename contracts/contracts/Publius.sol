@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.18;
 
-import { ERC721Upgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import { ERC721EnumerableUpgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { BeaconProxy } from "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
@@ -10,7 +10,7 @@ import 'base64-sol/base64.sol';
 
 contract Publius is 
 	Initializable, 
-	ERC721Upgradeable, 
+	ERC721EnumerableUpgradeable, 
 	OwnableUpgradeable {
 	
 	// GLOBAL STATE
@@ -24,6 +24,7 @@ contract Publius is
 	// @dev Publication chapter storage
 	mapping(uint256 => Chapter) public chapters;
 
+	// @dev Publication metadata
 	string public publicationName;
 	address public publicationAuthor;
 	string public publicationCoverImage;
@@ -64,7 +65,20 @@ contract Publius is
 		publicationName = _publicationName;
 		publicationAuthor = _publicationAuthor;
 		publicationCoverImage = _publicationCoverImage;
+	}
 
+	/*
+	@dev Mint new tokens
+	@param _to The address to mint the tokens to
+	*/
+	function mint(uint256 _amount) public payable {
+		require(msg.value >= _amount * 0.01 ether, "Not enough ETH sent");
+		for (uint256 i = 0; i < _amount; i++) {
+			uint256 tokenId = totalSupply() + 1;
+			_mint(msg.sender, tokenId);
+			tokenIdToMinter[tokenId] = msg.sender;
+			minterOwnedTokens[msg.sender].push(tokenId);
+		}
 	}
 
 	function addSection(string calldata _sectionName, uint256 _sectionId, string calldata _sectionImage, bytes calldata _chapterInfo) public onlyOwner {
@@ -131,7 +145,10 @@ contract Publius is
 	}
 
 
-	
+	/*
+	@dev - Helper function to convert a uint to a string
+	@param num - The uint to convert
+	*/
     function uint2str(uint256 num) internal pure returns (string memory) {
         if (num == 0) {
             return "0";
@@ -154,6 +171,10 @@ contract Publius is
         return string(bstr);
     }
 
+	/*
+	* @dev Get the token URI
+	* @param tokenId The token ID to get the URI for
+	*/
 	function tokenURI(uint256 tokenId) public view override returns (string memory) {
 		require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 

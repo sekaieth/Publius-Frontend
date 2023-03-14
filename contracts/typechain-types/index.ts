@@ -12,6 +12,10 @@ export type { Initializable } from "./@openzeppelin/contracts-upgradeable/proxy/
 export { Initializable__factory } from "./factories/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable__factory";
 export type { ERC721Upgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable";
 export { ERC721Upgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable__factory";
+export type { ERC721EnumerableUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable";
+export { ERC721EnumerableUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable__factory";
+export type { IERC721EnumerableUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable";
+export { IERC721EnumerableUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable__factory";
 export type { IERC721MetadataUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable";
 export { IERC721MetadataUpgradeable__factory } from "./factories/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable__factory";
 export type { IERC721ReceiverUpgradeable } from "./@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable";
