@@ -171,7 +171,6 @@ contract Publius is
 					uint2str(section.sectionId), 
 					'", "sectionName": "', 
 					section.sectionName, 
-					'", "sectionDescription": "', 
 					'", "sectionImage": "', 
 					section.sectionImage,
 					'", "chapters": ['
@@ -190,7 +189,6 @@ contract Publius is
 					uint2str(chapter.chapterId), 
 					'", "chapterName": "', 
 					chapter.chapterName, 
-					'", "chapterDescription": "', 
 					'", "chapterImage": "', 
 					chapter.chapterImage,
 					'", "pages": ['
