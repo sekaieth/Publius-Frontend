@@ -142,18 +142,6 @@ contract Publius is
 	}
 
 	function tokenURI(uint256 _tokenId) public view override returns (string memory uri) {
-		Section storage section = sections[_tokenId];
-		Chapter memory chapter = section.chapters[_tokenId];
-		Page memory page = chapter.pages[_tokenId];
-		uri = string(abi.encodePacked(
-			"Section: ",
-			section.sectionName,
-			" Chapter: ",
-			chapter.chapterName,
-			" Page: ",
-			page.pageName,
-			" Content: ",
-			page.pageContent
-		));
+
 	}
 }
