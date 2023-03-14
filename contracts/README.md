@@ -1,13 +1,5 @@
-# Sample Hardhat Project
+# Publius Contracts
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Publius is a set of proxy contracts than enable any front end to send the required publication information to a factory contract, which will deploy a new publication ERC721 contract and change ownership of the new publication to the specified author.
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+The maintainer of Publius, [sekaieth](https://github.com/sekaieth), will retain ownership over the Beacon contract and the factory contract, and as such will have the ability to upgrade all deployed contracts if/when a new version of Publius is released.  
