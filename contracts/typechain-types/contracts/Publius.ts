@@ -28,6 +28,20 @@ import type {
   PromiseOrValue,
 } from "../common";
 
+export declare namespace Publius {
+  export type PageStruct = {
+    pageName: PromiseOrValue<string>;
+    pageId: PromiseOrValue<BigNumberish>;
+    pageContent: PromiseOrValue<string>;
+  };
+
+  export type PageStructOutput = [string, BigNumber, string] & {
+    pageName: string;
+    pageId: BigNumber;
+    pageContent: string;
+  };
+}
+
 export interface PubliusInterface extends utils.Interface {
   functions: {
     "addChapter(string,string,uint256,string[],string[])": FunctionFragment;
@@ -37,6 +51,7 @@ export interface PubliusInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "chapters(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getPage(uint256,uint256)": FunctionFragment;
     "initialize(address,string,string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(uint256)": FunctionFragment;
@@ -72,6 +87,7 @@ export interface PubliusInterface extends utils.Interface {
       | "balanceOf"
       | "chapters"
       | "getApproved"
+      | "getPage"
       | "initialize"
       | "isApprovedForAll"
       | "mint"
@@ -140,6 +156,10 @@ export interface PubliusInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPage",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -256,6 +276,7 @@ export interface PubliusInterface extends utils.Interface {
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getPage", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
@@ -478,6 +499,12 @@ export interface Publius extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    getPage(
+      _chapter: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[Publius.PageStructOutput]>;
+
     initialize(
       _publicationAuthor: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
@@ -648,6 +675,12 @@ export interface Publius extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getPage(
+    _chapter: PromiseOrValue<BigNumberish>,
+    _pageId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<Publius.PageStructOutput>;
+
   initialize(
     _publicationAuthor: PromiseOrValue<string>,
     _publicationName: PromiseOrValue<string>,
@@ -817,6 +850,12 @@ export interface Publius extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getPage(
+      _chapter: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<Publius.PageStructOutput>;
 
     initialize(
       _publicationAuthor: PromiseOrValue<string>,
@@ -1027,6 +1066,12 @@ export interface Publius extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getPage(
+      _chapter: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     initialize(
       _publicationAuthor: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
@@ -1182,6 +1227,12 @@ export interface Publius extends BaseContract {
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPage(
+      _chapter: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

@@ -58,7 +58,6 @@ contract Publius is
 	* @param _publicationCoverImage The cover image of the publication
 	*/
 	function initialize(address _publicationAuthor, string calldata _publicationName, string calldata _publicationCoverImage) public initializer {
-		require(keccak256(abi.encode(publicationAuthor)) != "", "Cannot Initialize more than once");
 		__ERC721_init(_publicationName, "PUBLIUS");
 		__Ownable_init();
 		transferOwnership(_publicationAuthor);
@@ -170,6 +169,11 @@ contract Publius is
         }
         return string(bstr);
     }
+
+	function getPage(uint256 _chapter, uint256 _pageId) public view returns (Page memory) {
+		Chapter storage chapter = chapters[_chapter];
+		return chapter.pages[_pageId];	
+	}
 
 	/*
 	* @dev Get the token URI
