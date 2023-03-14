@@ -1,0 +1,21 @@
+{
+    "Sections": [{
+            "sectionId": "",
+            "sectionName": "",
+            "sectionDescription": "",
+            "sectionImage": "",
+            "chapters": [{
+                    "chapterId": "",
+                    "chapterName": "",
+                    "chapterDescription": "",
+                    "chapterImage": "",
+                    "pages": [{
+                            "pageId": "",
+                            "pageName": "",
+                            "pageDescription": "",
+                            "pageImage": "",
+                            "pageContent": ""
+                    }]
+            }]
+    }]
+}
