@@ -1,21 +1,24 @@
 {
-    "Sections": [{
-            "sectionId": "",
-            "sectionName": "",
-            "sectionDescription": "",
-            "sectionImage": "",
-            "chapters": [{
-                    "chapterId": "",
-                    "chapterName": "",
-                    "chapterDescription": "",
-                    "chapterImage": "",
-                    "pages": [{
-                            "pageId": "",
-                            "pageName": "",
-                            "pageDescription": "",
-                            "pageImage": "",
-                            "pageContent": ""
-                    }]
-            }]
-    }]
+    "Publication": {
+        "publicationId": 0,
+        "publicationName": "",
+        "authorName": "",
+        "coverImage": "",
+        "Sections": [{
+                "sectionId": "",
+                "sectionName": "",
+                "sectionImage": "",
+                "chapters": [{
+                        "chapterId": "",
+                        "chapterName": "",
+                        "chapterImage": "",
+                        "pages": [{
+                                "pageId": "",
+                                "pageName": "",
+                                "pageContent": ""
+                        }]
+
+                }]
+        }]
+        }
 }

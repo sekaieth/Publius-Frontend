@@ -133,6 +133,7 @@ contract Publius is
 	* @param _chapter The chapter the page belongs to
 	*/
 	function addPage(uint256 _chapter, string calldata _pageName, string calldata _pageContent) public onlyOwner {
+		require(keccak256(abi.encode(chapters[_chapter].chapterName)) != keccak256(abi.encode("")), "Chapter does not exist");
 		Chapter storage chapter = chapters[_chapter];
 
 		chapter.pages[chapter.pageCount + 1] = (Page(
@@ -179,97 +180,111 @@ contract Publius is
 	* @dev Get the token URI
 	* @param tokenId The token ID to get the URI for
 	*/
-	function tokenURI(uint256 tokenId) public view override returns (string memory) {
-		require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
-		// Build the JSON structure
-		string memory json = '{ "Sections": [';
+    // Build the JSON structure
+    string memory json = '{ "Publication": {';
 
-		for (uint256 i = 0; i < sectionCount; i++) {
-			// Get the section details
-			Section storage section = sections[i];
+    // Add publication details to JSON
+    json = string(abi.encodePacked(
+        ', "publicationName": "',
+        publicationName,
+        '", "authorName": "',
+        publicationAuthor,
+        '", "coverImage": "',
+        publicationCoverImage,
+        '", "Sections": ['
+    ));
 
-			// Build the section JSON
-			string memory sectionJson = 
-				string(abi.encodePacked(
-					'{ "sectionId": "', 
-					uint2str(section.sectionId), 
-					'", "sectionName": "', 
-					section.sectionName, 
-					'", "sectionImage": "', 
-					section.sectionImage,
-					'", "chapters": ['
-				));
+    // Loop over sections
+    for (uint256 i = 0; i < sectionCount; i++) {
+        // Get the section details
+        Section storage section = sections[i];
 
-			// Build the chapter JSON
-			string memory chapterJson = "";
-			for (uint256 j = 0; j < section.chapters.length; j++) {
-				// Get the chapter details
-				Chapter storage chapter = chapters[section.chapters[j]];
+        // Add section details to JSON
+        string memory sectionJson = string(abi.encodePacked(
+            '{ "sectionId": "',
+            uint2str(section.sectionId),
+            '", "sectionName": "',
+            section.sectionName,
+            '", "sectionImage": "',
+            section.sectionImage,
+            '", "chapters": ['
+        ));
 
-				// Build the chapter JSON
-				chapterJson = string(abi.encodePacked(
-					chapterJson,
-					'{ "chapterId": "', 
-					uint2str(chapter.chapterId), 
-					'", "chapterName": "', 
-					chapter.chapterName, 
-					'", "chapterImage": "', 
-					chapter.chapterImage,
-					'", "pages": ['
-				));
+        // Loop over chapters
+        for (uint256 j = 0; j < section.chapters.length; j++) {
+            // Get the chapter details
+            Chapter storage chapter = chapters[j];
 
-				// Build the page JSON
-				string memory pageJson = "";
-				for (uint256 k = 0; k < chapter.pageCount; k++) {
-					// Get the page details
-					Page storage page = chapter.pages[k];
+            // Add chapter details to JSON
+            string memory chapterJson = string(abi.encodePacked(
+                '{ "chapterId": "',
+                uint2str(chapter.chapterId),
+                '", "chapterName": "',
+                chapter.chapterName,
+                '", "chapterImage": "',
+                chapter.chapterImage,
+                '", "pages": ['
+            ));
 
-					// Build the page JSON
-					pageJson = string(abi.encodePacked(
-						pageJson,
-						'{ "pageId": "', 
-						uint2str(page.pageId), 
-						'", "pageName": "', 
-						page.pageName, 
-						'", "pageContent": "', 
-						page.pageContent,
-						'"}'
-					));
+            // Loop over pages
+            for (uint256 k = 0; k < chapter.pageCount; k++) {
+                // Get the page details
+                Page storage page = chapter.pages[k];
 
-					// Add a comma to separate pages
-					if (k < chapter.pageCount - 1) {
-						pageJson = string(abi.encodePacked(pageJson, ","));
-					}
-				}
+                // Add page details to JSON
+                string memory pageJson = string(abi.encodePacked(
+                    '{ "pageId": "',
+                    uint2str(page.pageId),
+                    '", "pageName": "',
+                    page.pageName,
+                    '", "pageContent": "',
+                    page.pageContent,
+                    '"}'
+                ));
 
-				// Add the page JSON to the chapter JSON
-				chapterJson = string(abi.encodePacked(chapterJson, pageJson, "]"));
+                // Add a comma to separate pages
+                if (k < chapter.pageCount - 1) {
+                    pageJson = string(abi.encodePacked(pageJson, ","));
+                }
 
-				// Add a comma to separate chapters
-				if (j < section.chapters.length - 1) {
-					chapterJson = string(abi.encodePacked(chapterJson, ","));
-				}
-			}
+                // Add page JSON to chapter JSON
+                chapterJson = string(abi.encodePacked(chapterJson, pageJson));
+            }
 
-			// Add the chapter JSON to the section JSON
-			sectionJson = string(abi.encodePacked(sectionJson, chapterJson, "]"));
+            // Close the pages array
+            chapterJson = string(abi.encodePacked(chapterJson, "]}"));
 
-			// Add the section JSON to the overall JSON
-			json = string(abi.encodePacked(json, sectionJson));
+            // Add a comma to separate chapters
+            if (j < section.chapters.length - 1) {
+                chapterJson = string(abi.encodePacked(chapterJson, ","));
+            }
 
-			// Add a comma to separate sections
-			if (i < sectionCount - 1) {
-				json = string(abi.encodePacked(json, ","));
-			}
+            // Add chapter JSON to section JSON
+            sectionJson = string(abi.encodePacked(sectionJson, chapterJson));
+        }
+
+        // Close the chapters array
+        sectionJson = string(abi.encodePacked(sectionJson, "]}"));
+
+        // Add a comma to separate sections
+        if (i < sectionCount - 1) {
+			sectionJson = string(abi.encodePacked(sectionJson, ","));
 		}
-
-		// Close the JSON structure
-		json = string(abi.encodePacked(json, ']}'));
-		
-		// Concatenate the base URI and the JSON structure to form the complete URI
-		string memory baseURI = _baseURI();
-		return string(abi.encodePacked(baseURI, json));
+     // Add section JSON to publication JSON
+     json = string(abi.encodePacked(json, sectionJson));
 	}
 
+	// Close the sections array
+	json = string(abi.encodePacked(json, "]}"));
+
+	// Close the JSON structure
+	json = string(abi.encodePacked(json, "}}"));
+
+	// Concatenate the base URI and the JSON structure to form the complete URI
+	string memory baseURI = _baseURI();
+	return string(abi.encodePacked(baseURI, json));
+	}
 }
