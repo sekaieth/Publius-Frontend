@@ -3,38 +3,23 @@ import { expect } from 'chai';
 import { Publius } from '../typechain-types';
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import * as fs from 'fs';
+import { 
+  Chapter,
+  Page,
+  Section,
+  Publication
+} from '../interfaces';
 
-interface Page {
-    pageId: number;
-    pageName: string;
-    pageContent: string;
-}
 
-interface Chapter {
-    chapterId: number;
-    chapterName: string;
-    chapterImage: string;
-    pages: Page[];
-}
-
-interface Section {
-    sectionId: number;
-    sectionName: string;
-    sectionImage: string;
-    chapters: Chapter[];
-}
-interface Publication {
-    publicationId: number;
-    publicationName: string;
-    authorName: string;
-    coverImage: string;
-    sections: Section[];
-}
 
 describe("Publius", function () {
   let deployer: SignerWithAddress;
   let author: SignerWithAddress;
   let publius: Publius;
+  let sectionToEncode: Section;
+  let encodedChapters: string;
+  let encodedSection: string;
+  let encodedPages: string;
 
   beforeEach(async function () {
     [deployer, author] = await ethers.getSigners();
@@ -42,36 +27,25 @@ describe("Publius", function () {
     publius = await upgrades.deployProxy(PubliusFactory, [ 
       author.address, 
       'Test Publication', 
-      "" 
+      "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true" 
     ]) as Publius;
     await publius.deployed();
-  });
 
-  describe("addSection", function () {
-    let pageNames: Chapter[];
-    let pageContents: string[][];
 
-    it("should mint a new token", async function () {
-        await publius.connect(deployer).mint(3, {value: ethers.utils.parseEther("0.03")})
-    });
-
-    it("should return the correct token URI", async function () {
-      const sectionToEncode: Section = {
-        sectionId = 11,
-        sectionName = "Section 1",
-        sectionImage = "image1",
-        chapters = [
+      sectionToEncode  = {
+        sectionId: 11,
+        sectionName: "Section 1",
+        sectionImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
+        chapters: [
           {
             chapterId: 1,
             chapterName: "Chapter 1",
-            chapterImage: "image2",
+            chapterImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
             pages: [{
-              pageId: 1,
               pageName: "Page 1",
               pageContent: "Content 1"
             },
             {
-              pageId: 2,
               pageName: "Page 2",
               pageContent: "Content 2"
             }]
@@ -79,90 +53,97 @@ describe("Publius", function () {
           {
             chapterId: 2,
             chapterName: "Chapter 2",
-            chapterImage: "image3",
+            chapterImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
             pages: [{
-              pageId: 3,
               pageName: "Page 3",
               pageContent: "Content 3"
             },
             {
-              pageId: 4,
               pageName: "Page 4",
               pageContent: "Content 4"
             }]
           }
-        ];
+        ]
       };
 
+    encodedSection = ethers.utils.defaultAbiCoder.encode(
+        [
+          "string",
+          "string",
+          "uint256",
+        ],
+        [
+          sectionToEncode.sectionName,
+          sectionToEncode.sectionImage,
+          sectionToEncode.sectionId,
+        ]
+    );
+
+    encodedChapters = ethers.utils.defaultAbiCoder.encode(
+        [
+            "string[]",
+            "string[]", 
+            "uint256[]",
+        ],
+        [
+            sectionToEncode.chapters.map(chapter => chapter.chapterName),
+            sectionToEncode.chapters.map(chapter => chapter.chapterImage),
+            sectionToEncode.chapters.map(chapter => chapter.chapterId),
+        ]
+    );
+
+    encodedPages = ethers.utils.defaultAbiCoder.encode(
+        [
+            "string[]",
+            "string[]",
+        ],
+        [
+            sectionToEncode.chapters.flatMap(chapter => chapter.pages.map(page => page.pageName)),
+            sectionToEncode.chapters.flatMap(chapter => chapter.pages.map(page => page.pageContent))
+        ]
+    );
 
 
-        const chapterInfo = ethers.utils.defaultAbiCoder.encode(
-        ["tuple(uint256, string, string, tuple(uint256, string, string, tuple(uint256, string, string)[])[])["],
-        [chapterNames, chapterImages, chapterIds, pageNames, pageContents]
-        );
-        
-        await publius.connect(author).addSection(sectionName, 0, sectionImage, chapterInfo);
-        sectionId = 0;
-        const section = await publius.sections(sectionId);
-        expect(section.sectionId).to.equal(sectionId);
-        expect(section.sectionName).to.equal(sectionName);
-        expect(section.sectionImage).to.equal(sectionImage);
 
-        const chapter = await publius.chapters(1);
-        expect(chapter.chapterName).to.equal(chapterNames[0]);
-        expect(chapter.chapterImage).to.equal(chapterImages[0]);
-        expect(chapter.pageCount).to.equal(pageNames.length);
 
-        const page = await publius.getPage(1, 1);
-        expect(page.pageName).to.equal(pageNames[0][0]);
-        expect(page.pageContent).to.equal(pageContents[0][0]);
+  });
+
+  describe("addSection", function () {
+    it("should mint a new token", async function () {
         await publius.connect(deployer).mint(3, {value: ethers.utils.parseEther("0.03")})
+        expect(await publius.balanceOf(deployer.address)).to.equal(3);
+    });
+
+    it("should return the correct token URI", async function () {
+
+        const addSectionTx = await publius.connect(author).addSection(
+          encodedSection,
+          encodedChapters,
+          encodedPages 
+        );
+        await addSectionTx.wait();
+
+        await publius.connect(deployer).mint(3, {value: ethers.utils.parseEther("0.03")});
         const expectedJSON: Publication = {
           publicationId: 0,
-          publicationName: "",
-          authorName: "Thomas Jefferson",
-          coverImage: "",
+          publicationName: "Test Publication",
+          authorName: author.address,
+          coverImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
           sections: [
             {
-              sectionId: sectionId,
-              sectionName: sectionName,
-              sectionImage: sectionImage,
-              chapters: [
-                {
-                  chapterId: 1,
-                  chapterName: chapterNames[0],
-                  chapterImage: chapterImages[0],
-                  pages: [
-                    {
-                      pageId: 1,
-                      pageName: pageNames[0][0],
-                      pageContent: pageContents[0][0],
-                    },
-                    {
-                      pageId: 2,
-                      pageName: pageNames[0][1],
-                      pageContent: pageContents[0][1],
-                    },
-                  ],
-                },
-                {
-                  chapterId: 2,
-                  chapterName: chapterNames[1],
-                  chapterImage: chapterImages[1],
-                  pages: [
-                    {
-                      pageId: 1,
-                      pageName: pageNames[1][0],
-                      pageContent: pageContents[1][0],
-                    },
-                    {
-                      pageId: 2,
-                      pageName: pageNames[1][1],
-                      pageContent: pageContents[1][1],
-                    },
-                  ],
-                },
-              ],
+              sectionId: sectionToEncode.sectionId,
+              sectionName: sectionToEncode.sectionName,
+              sectionImage: sectionToEncode.sectionImage,
+              chapters: 
+                sectionToEncode.chapters.map(chapter => ({
+                  chapterId: chapter.chapterId,
+                  chapterName: chapter.chapterName,
+                  chapterImage: chapter.chapterImage,
+                  pages: chapter.pages.map(page => ({
+                    pageName: page.pageName,
+                    pageContent: page.pageContent,
+                    })),
+                  })),
             },
           ],
         };
@@ -172,6 +153,8 @@ describe("Publius", function () {
                 console.log('Saved!');
                 });
             expect(JSON.parse(await publius.tokenURI(1))).to.equal(JSON.stringify(expectedJSON));
+    });
+
+
         });
     });
-});

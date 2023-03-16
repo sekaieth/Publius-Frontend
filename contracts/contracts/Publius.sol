@@ -6,7 +6,7 @@ import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/I
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { BeaconProxy } from "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import 'base64-sol/base64.sol';
-
+import "hardhat/console.sol";
 
 contract Publius is 
 	Initializable, 
@@ -80,56 +80,38 @@ contract Publius is
 		}
 	}
 
-	function addSection(bytes calldata _encodedSection) public onlyOwner {
+	function addSection(bytes calldata _sectionInfo, bytes calldata _chapterInfo, bytes calldata _pageInfo) public onlyOwner {
+		// Decode Section Info
+		(
+			string memory _sectionName, 
+			string memory _sectionImage, 
+			uint256 _sectionId
+		) = abi.decode(_sectionInfo, (string, string, uint256));
 
-    // Decode section info
-    (
-        uint256 _sectionId,
-        string memory _sectionName,
-        string memory _sectionImage,
-        uint256[] memory _chapterIds,
-		string[] memory _chapterNames,
-		string[] memory _chapterImages,
-        uint256[] memory _pageIds,
-        string[] memory _pageNames,
-        string[] memory _pageContents
-    ) = abi.decode(_encodedSection, (
-        uint256,
-        string,
-        string,
-        uint256[],
-		string[],
-		string[],
-        uint256[],
-        string[],
-        string[]
-    ));
+		// Decode chapter info
+		(
+			string[] memory _chapterNames, 
+			string[] memory _chapterImages, 
+			uint256[] memory _chapterIds 
+		) = abi.decode(_chapterInfo, (string[], string[], uint256[]));
+
+		// Decode page info
+		(
+			string[] memory _pageNames, 
+			string[] memory _pageContent
+		) = abi.decode(_pageInfo, (string[], string[]));
 
 		// Fill in section data
 		sections[_sectionId].sectionName = _sectionName;
 		sections[_sectionId].sectionId = _sectionId;
 		sections[_sectionId].sectionImage = _sectionImage;
+		sections[_sectionId].chapters = _chapterIds;
 
-    // Loop through chapters and add them to the chapter mapping
-    for (uint256 i = 0; i < _chapterIds.length; i++) {
-        uint256 _chapterId = _chapterIds[i];
-        string memory _chapterName = _chapterNames[i];
-        string memory _chapterImage = _chapterImages[i];
-        Chapter storage _chapter = chapters[_chapterId];
+		// Load each chapter with pages
+		for(uint256 i = 0; i < _chapterNames.length; i++) {
+			addChapter(_chapterNames[i], _chapterImages[i], _chapterIds[i], _pageNames, _pageContent);
+		}
 
-        // Fill in chapter data
-        _chapter.chapterName = _chapterName;
-        _chapter.chapterId = _chapterId;
-        _chapter.chapterImage = _chapterImage;
-
-        // Loop through pages and add them to the chapter
-        for (uint256 j = 0; j < _pageIds.length; j++) {
-            uint256 _pageId = _pageIds[j];
-            string memory _pageName = _pageNames[j];
-            string memory _pageContent = _pageContents[j];
-            _chapter.pages[j] = (Page(_pageName, _pageId, _pageContent));
-        }
-    }
 		sectionCount++;
 	}
 	
@@ -172,6 +154,10 @@ contract Publius is
 		chapter.pageCount++;
 	}
 
+	function getPage(uint256 _chapter, uint256 _pageId) public view returns (Page memory) {
+		Chapter storage chapter = chapters[_chapter];
+		return chapter.pages[_pageId];	
+	}
 
 	/*
 	@dev - Helper function to convert a uint to a string
@@ -199,11 +185,19 @@ contract Publius is
         return string(bstr);
     }
 
-	function getPage(uint256 _chapter, uint256 _pageId) public view returns (Page memory) {
-		Chapter storage chapter = chapters[_chapter];
-		return chapter.pages[_pageId];	
-	}
-
+    function addressToString(address _address) public pure returns (string memory) {
+        bytes32 value = bytes32(uint256(uint160(_address)));
+        bytes memory alphabet = "0123456789abcdef";
+        
+        bytes memory str = new bytes(42);
+        str[0] = '0';
+        str[1] = 'x';
+        for (uint256 i = 0; i < 20; i++) {
+            str[2 + i * 2] = alphabet[uint8(value[i + 12] >> 4)];
+            str[3 + i * 2] = alphabet[uint8(value[i + 12] & 0x0f)];
+        }
+        return string(str);
+    }
 	/*
 	* @dev Get the token URI
 	* @param tokenId The token ID to get the URI for
@@ -219,7 +213,7 @@ function tokenURI(uint256 tokenId) public view override returns (string memory) 
         ', "publicationName": "',
         publicationName,
         '", "authorName": "',
-        publicationAuthor,
+        addressToString(publicationAuthor),
         '", "coverImage": "',
         publicationCoverImage,
         '", "Sections": ['

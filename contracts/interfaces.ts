@@ -1,5 +1,4 @@
 export interface Page {
-    pageId: number;
     pageName: string;
     pageContent: string;
 }
