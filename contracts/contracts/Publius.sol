@@ -80,28 +80,56 @@ contract Publius is
 		}
 	}
 
-	function addSection(string calldata _sectionName, uint256 _sectionId, string calldata _sectionImage, bytes calldata _chapterInfo) public onlyOwner {
+	function addSection(bytes calldata _encodedSection) public onlyOwner {
 
-		// Decode chapter info
-		(
-			string[] memory _chapterNames, 
-			string[] memory _chapterImages, 
-			uint256[] memory _chapterIds, 
-			string[] memory _pageNames, 
-			string[] memory _pageContent
-		) = abi.decode(_chapterInfo, (string[], string[], uint256[], string[], string[]));
+    // Decode section info
+    (
+        uint256 _sectionId,
+        string memory _sectionName,
+        string memory _sectionImage,
+        uint256[] memory _chapterIds,
+		string[] memory _chapterNames,
+		string[] memory _chapterImages,
+        uint256[] memory _pageIds,
+        string[] memory _pageNames,
+        string[] memory _pageContents
+    ) = abi.decode(_encodedSection, (
+        uint256,
+        string,
+        string,
+        uint256[],
+		string[],
+		string[],
+        uint256[],
+        string[],
+        string[]
+    ));
 
 		// Fill in section data
 		sections[_sectionId].sectionName = _sectionName;
 		sections[_sectionId].sectionId = _sectionId;
 		sections[_sectionId].sectionImage = _sectionImage;
-		sections[_sectionId].chapters = _chapterIds;
 
-		// Load each chapter with pages
-		for(uint256 i = 0; i < _chapterNames.length; i++) {
-			addChapter(_chapterNames[i], _chapterImages[i], _chapterIds[i], _pageNames, _pageContent);
-		}
+    // Loop through chapters and add them to the chapter mapping
+    for (uint256 i = 0; i < _chapterIds.length; i++) {
+        uint256 _chapterId = _chapterIds[i];
+        string memory _chapterName = _chapterNames[i];
+        string memory _chapterImage = _chapterImages[i];
+        Chapter storage _chapter = chapters[_chapterId];
 
+        // Fill in chapter data
+        _chapter.chapterName = _chapterName;
+        _chapter.chapterId = _chapterId;
+        _chapter.chapterImage = _chapterImage;
+
+        // Loop through pages and add them to the chapter
+        for (uint256 j = 0; j < _pageIds.length; j++) {
+            uint256 _pageId = _pageIds[j];
+            string memory _pageName = _pageNames[j];
+            string memory _pageContent = _pageContents[j];
+            _chapter.pages[j] = (Page(_pageName, _pageId, _pageContent));
+        }
+    }
 		sectionCount++;
 	}
 	

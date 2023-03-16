@@ -48,11 +48,7 @@ describe("Publius", function () {
   });
 
   describe("addSection", function () {
-    let sectionName: string;
-    let sectionImage: string;
-    let chapterNames: string[];
-    let chapterImages: string[];
-    let pageNames: string[][];
+    let pageNames: Chapter[];
     let pageContents: string[][];
 
     it("should mint a new token", async function () {
@@ -60,23 +56,49 @@ describe("Publius", function () {
     });
 
     it("should return the correct token URI", async function () {
-        sectionName = "Section 1";
-        sectionImage = "image1";
-        chapterNames = ["Chapter 1", "Chapter 2"];
-        chapterImages = ["image2", "image3"];
-        pageNames = [["Page 1", "Page 2"], ["Page 3", "Page 4"]];
-        pageContents = [["Content 1", "Content 2"], ["Content 3", "Content 4"]];
-        let sectionId: number;
+      const sectionToEncode: Section = {
+        sectionId = 11,
+        sectionName = "Section 1",
+        sectionImage = "image1",
+        chapters = [
+          {
+            chapterId: 1,
+            chapterName: "Chapter 1",
+            chapterImage: "image2",
+            pages: [{
+              pageId: 1,
+              pageName: "Page 1",
+              pageContent: "Content 1"
+            },
+            {
+              pageId: 2,
+              pageName: "Page 2",
+              pageContent: "Content 2"
+            }]
+          },
+          {
+            chapterId: 2,
+            chapterName: "Chapter 2",
+            chapterImage: "image3",
+            pages: [{
+              pageId: 3,
+              pageName: "Page 3",
+              pageContent: "Content 3"
+            },
+            {
+              pageId: 4,
+              pageName: "Page 4",
+              pageContent: "Content 4"
+            }]
+          }
+        ];
+      };
 
-        const chapterIds: number[] = [];
-        for (let i = 0; i < chapterNames.length; i++) {
-        const chapterId = i + 1;
-        chapterIds.push(chapterId);
-        }
+
 
         const chapterInfo = ethers.utils.defaultAbiCoder.encode(
-        ["string[]", "string[]", "uint256[]", "string[]", "string[]"],
-        [chapterNames, chapterImages, chapterIds, pageNames[0], pageContents[0]]
+        ["tuple(uint256, string, string, tuple(uint256, string, string, tuple(uint256, string, string)[])[])["],
+        [chapterNames, chapterImages, chapterIds, pageNames, pageContents]
         );
         
         await publius.connect(author).addSection(sectionName, 0, sectionImage, chapterInfo);
@@ -89,7 +111,7 @@ describe("Publius", function () {
         const chapter = await publius.chapters(1);
         expect(chapter.chapterName).to.equal(chapterNames[0]);
         expect(chapter.chapterImage).to.equal(chapterImages[0]);
-        expect(chapter.pageCount).to.equal(pageNames[0].length);
+        expect(chapter.pageCount).to.equal(pageNames.length);
 
         const page = await publius.getPage(1, 1);
         expect(page.pageName).to.equal(pageNames[0][0]);

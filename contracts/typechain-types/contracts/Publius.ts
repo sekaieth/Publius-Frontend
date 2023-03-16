@@ -46,7 +46,7 @@ export interface PubliusInterface extends utils.Interface {
   functions: {
     "addChapter(string,string,uint256,string[],string[])": FunctionFragment;
     "addPage(uint256,string,string)": FunctionFragment;
-    "addSection(string,uint256,string,bytes)": FunctionFragment;
+    "addSection(bytes)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "chapters(uint256)": FunctionFragment;
@@ -134,12 +134,7 @@ export interface PubliusInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "addSection",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BytesLike>
-    ]
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "approve",
@@ -464,10 +459,7 @@ export interface Publius extends BaseContract {
     ): Promise<ContractTransaction>;
 
     addSection(
-      _sectionName: PromiseOrValue<string>,
-      _sectionId: PromiseOrValue<BigNumberish>,
-      _sectionImage: PromiseOrValue<string>,
-      _chapterInfo: PromiseOrValue<BytesLike>,
+      _encodedSection: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -640,10 +632,7 @@ export interface Publius extends BaseContract {
   ): Promise<ContractTransaction>;
 
   addSection(
-    _sectionName: PromiseOrValue<string>,
-    _sectionId: PromiseOrValue<BigNumberish>,
-    _sectionImage: PromiseOrValue<string>,
-    _chapterInfo: PromiseOrValue<BytesLike>,
+    _encodedSection: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -816,10 +805,7 @@ export interface Publius extends BaseContract {
     ): Promise<void>;
 
     addSection(
-      _sectionName: PromiseOrValue<string>,
-      _sectionId: PromiseOrValue<BigNumberish>,
-      _sectionImage: PromiseOrValue<string>,
-      _chapterInfo: PromiseOrValue<BytesLike>,
+      _encodedSection: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1038,10 +1024,7 @@ export interface Publius extends BaseContract {
     ): Promise<BigNumber>;
 
     addSection(
-      _sectionName: PromiseOrValue<string>,
-      _sectionId: PromiseOrValue<BigNumberish>,
-      _sectionImage: PromiseOrValue<string>,
-      _chapterInfo: PromiseOrValue<BytesLike>,
+      _encodedSection: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1202,10 +1185,7 @@ export interface Publius extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     addSection(
-      _sectionName: PromiseOrValue<string>,
-      _sectionId: PromiseOrValue<BigNumberish>,
-      _sectionImage: PromiseOrValue<string>,
-      _chapterInfo: PromiseOrValue<BytesLike>,
+      _encodedSection: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
