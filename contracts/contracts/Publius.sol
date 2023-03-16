@@ -210,10 +210,11 @@ function tokenURI(uint256 tokenId) public view override returns (string memory) 
 
     // Add publication details to JSON
     json = string(abi.encodePacked(
+		', "publicationId": "',
         ', "publicationName": "',
         publicationName,
         '", "authorName": "',
-        addressToString(publicationAuthor),
+        addressToString(publicationAuthor)),
         '", "coverImage": "',
         publicationCoverImage,
         '", "Sections": ['
