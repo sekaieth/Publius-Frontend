@@ -97,9 +97,9 @@ contract Publius is
 
 		// Decode page info
 		(
-			string[] memory _pageNames, 
-			string[] memory _pageContent
-		) = abi.decode(_pageInfo, (string[], string[]));
+			string[][] memory _pageNames, 
+			string[][] memory _pageContent
+		) = abi.decode(_pageInfo, (string[][], string[][]));
 
 		// Fill in section data
 		uint256 newSection = sectionCount + 1;
@@ -108,15 +108,12 @@ contract Publius is
 		sections[newSection].sectionImage = _sectionImage;
 		sections[newSection].chapters = _chapterIds;
 
-		
-
     // Load each chapter with pages
-    for(uint256 i = 1; i < _chapterIds.length; i++) {
-		console.log("CHAPTER ID", _chapterIds[i]);
+    for(uint256 i = 0; i < _chapterIds.length; i++) {
         // Check if the chapter belongs to the current section
         if (_chapterIds[i] == sections[_sectionId].chapters[i]) {
-            addChapter(_chapterNames[i], _chapterImages[i], _chapterIds[i], _pageNames, _pageContent);
-            sections[newSection].chapters.push(_chapterIds[i]);
+            addChapter(_chapterNames[i], _chapterImages[i], _chapterIds[i], _pageNames[i], _pageContent[i]);
+			console.log("Chapter %s added to section %s", _chapterNames[i], _sectionName);
         }
     }
 
