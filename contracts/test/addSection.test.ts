@@ -12,13 +12,15 @@ import {
 
 
 describe('Test Adding A Section', () => {
-  let publius: Publius;
-  let author: string;
-  let publicationName: string;
-  let publicationCoverImage: string;
-  let authorWalletPublius: Publius;
-  let sectionToEncode: Section;
-  let encodedSection: string; 
+    let publius: Publius;
+    let author: string;
+    let publicationName: string;
+    let publicationCoverImage: string;
+    let authorWalletPublius: Publius;
+    let sectionToEncode: Section;
+    let encodedSection: string; 
+    let encodedChapters: string;
+    let encodedPages: string;
 
 
   beforeEach(async () => {
@@ -37,7 +39,7 @@ describe('Test Adding A Section', () => {
     authorWalletPublius = publius.connect(signers[1]);
 
       sectionToEncode  = {
-        sectionId: 11,
+        sectionId: 1,
         sectionName: "Section 1",
         sectionImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
         chapters: [
@@ -72,18 +74,38 @@ describe('Test Adding A Section', () => {
 
     encodedSection = ethers.utils.defaultAbiCoder.encode(
         [
+          "string",
+          "string",
+          "uint256",
+        ],
+        [
+          sectionToEncode.sectionName,
+          sectionToEncode.sectionImage,
+          sectionToEncode.sectionId,
+        ]
+    );
+
+    encodedChapters = ethers.utils.defaultAbiCoder.encode(
+        [
             "string[]",
-            "string[]",
+            "string[]", 
             "uint256[]",
-            "string[]",
-            "string[]",
         ],
         [
             sectionToEncode.chapters.map(chapter => chapter.chapterName),
             sectionToEncode.chapters.map(chapter => chapter.chapterImage),
             sectionToEncode.chapters.map(chapter => chapter.chapterId),
-            sectionToEncode.chapters.map(chapter => chapter.pages.map(page => page.pageName)).flat(),
-            sectionToEncode.chapters.map(chapter => chapter.pages.map(page => page.pageContent)).flat(),
+        ]
+    );
+
+    encodedPages = ethers.utils.defaultAbiCoder.encode(
+        [
+            "string[]",
+            "string[]",
+        ],
+        [
+            sectionToEncode.chapters.flatMap(chapter => chapter.pages.map(page => page.pageName)),
+            sectionToEncode.chapters.flatMap(chapter => chapter.pages.map(page => page.pageContent))
         ]
     );
 
@@ -93,18 +115,16 @@ describe('Test Adding A Section', () => {
   describe("addSection", function () {
     it("should not allow a non-owner to add a new section", async function() {
         await expect(publius.addSection(
-            sectionToEncode.sectionName,
-            sectionToEncode.sectionId,
-            sectionToEncode.sectionImage,
-            encodedSection 
+            encodedSection, 
+            encodedChapters,
+            encodedPages
         )).to.be.revertedWith("Ownable: caller is not the owner");
     })
     it("should add a new section", async function () {
         const addSectionTx = await authorWalletPublius.addSection(
-            sectionToEncode.sectionName,
-            sectionToEncode.sectionId,
-            sectionToEncode.sectionImage,
-            encodedSection 
+            encodedSection, 
+            encodedChapters,
+            encodedPages
         );
         await addSectionTx.wait();
 

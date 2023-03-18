@@ -102,13 +102,14 @@ contract Publius is
 		) = abi.decode(_pageInfo, (string[], string[]));
 
 		// Fill in section data
-		sections[_sectionId].sectionName = _sectionName;
-		sections[_sectionId].sectionId = _sectionId;
-		sections[_sectionId].sectionImage = _sectionImage;
-		sections[_sectionId].chapters = _chapterIds;
+		uint256 newSection = sectionCount + 1;
+		sections[newSection].sectionName = _sectionName;
+		sections[newSection].sectionId = _sectionId;
+		sections[newSection].sectionImage = _sectionImage;
+		sections[newSection].chapters = _chapterIds;
 
 		// Load each chapter with pages
-		for(uint256 i = 0; i < _chapterNames.length; i++) {
+		for(uint256 i = 0; i < _chapterIds.length; i++) {
 			addChapter(_chapterNames[i], _chapterImages[i], _chapterIds[i], _pageNames, _pageContent);
 		}
 
@@ -135,6 +136,7 @@ contract Publius is
 		chapter.chapterName = _chapterName;
 		chapter.chapterId = _chapterId;
 		chapter.chapterImage = keccak256(abi.encode(_chapterImage)) != "" ?  _chapterImage : "";
+
 	}
 
 	/*
@@ -206,22 +208,22 @@ function tokenURI(uint256 tokenId) public view override returns (string memory) 
     require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
     // Build the JSON structure
-    string memory json = '{ "Publication": {';
+	string memory json = '{';
 
-    // Add publication details to JSON
-    json = string(abi.encodePacked(
-		', "publicationId": "',
-        ', "publicationName": "',
-        publicationName,
-        '", "authorName": "',
-        addressToString(publicationAuthor)),
-        '", "coverImage": "',
-        publicationCoverImage,
-        '", "Sections": ['
-    ));
+	// Add publication details to JSON
+	json = string(abi.encodePacked(
+		json,
+		'"publicationName": "',
+		publicationName,
+		'", "authorName": "',
+		addressToString(publicationAuthor),
+		'", "coverImage": "',
+		publicationCoverImage,
+		'", "sections": ['
+	));
 
     // Loop over sections
-    for (uint256 i = 0; i < sectionCount; i++) {
+    for (uint256 i = 1; i <= sectionCount; i++) {
         // Get the section details
         Section storage section = sections[i];
 
@@ -237,7 +239,7 @@ function tokenURI(uint256 tokenId) public view override returns (string memory) 
         ));
 
         // Loop over chapters
-        for (uint256 j = 0; j < section.chapters.length; j++) {
+        for (uint256 j = 1; j <= section.chapters.length; j++) {
             // Get the chapter details
             Chapter storage chapter = chapters[j];
 
@@ -253,7 +255,7 @@ function tokenURI(uint256 tokenId) public view override returns (string memory) 
             ));
 
             // Loop over pages
-            for (uint256 k = 0; k < chapter.pageCount; k++) {
+            for (uint256 k = 1; k <= chapter.pageCount; k++) {
                 // Get the page details
                 Page storage page = chapter.pages[k];
 
@@ -269,7 +271,7 @@ function tokenURI(uint256 tokenId) public view override returns (string memory) 
                 ));
 
                 // Add a comma to separate pages
-                if (k < chapter.pageCount - 1) {
+                if (k < chapter.pageCount) {
                     pageJson = string(abi.encodePacked(pageJson, ","));
                 }
 
@@ -281,7 +283,7 @@ function tokenURI(uint256 tokenId) public view override returns (string memory) 
             chapterJson = string(abi.encodePacked(chapterJson, "]}"));
 
             // Add a comma to separate chapters
-            if (j < section.chapters.length - 1) {
+            if (j < section.chapters.length) {
                 chapterJson = string(abi.encodePacked(chapterJson, ","));
             }
 
@@ -303,8 +305,6 @@ function tokenURI(uint256 tokenId) public view override returns (string memory) 
 	// Close the sections array
 	json = string(abi.encodePacked(json, "]}"));
 
-	// Close the JSON structure
-	json = string(abi.encodePacked(json, "}}"));
 
 	// Concatenate the base URI and the JSON structure to form the complete URI
 	string memory baseURI = _baseURI();
