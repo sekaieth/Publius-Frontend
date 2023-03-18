@@ -108,10 +108,17 @@ contract Publius is
 		sections[newSection].sectionImage = _sectionImage;
 		sections[newSection].chapters = _chapterIds;
 
-		// Load each chapter with pages
-		for(uint256 i = 0; i < _chapterIds.length; i++) {
-			addChapter(_chapterNames[i], _chapterImages[i], _chapterIds[i], _pageNames, _pageContent);
-		}
+		
+
+    // Load each chapter with pages
+    for(uint256 i = 1; i < _chapterIds.length; i++) {
+		console.log("CHAPTER ID", _chapterIds[i]);
+        // Check if the chapter belongs to the current section
+        if (_chapterIds[i] == sections[_sectionId].chapters[i]) {
+            addChapter(_chapterNames[i], _chapterImages[i], _chapterIds[i], _pageNames, _pageContent);
+            sections[newSection].chapters.push(_chapterIds[i]);
+        }
+    }
 
 		sectionCount++;
 	}
