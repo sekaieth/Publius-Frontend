@@ -31,21 +31,21 @@ import type {
 export declare namespace Publius {
   export type PageStruct = {
     pageName: PromiseOrValue<string>;
-    pageId: PromiseOrValue<BigNumberish>;
+    pageId: PromiseOrValue<string>;
     pageContent: PromiseOrValue<string>;
   };
 
-  export type PageStructOutput = [string, BigNumber, string] & {
+  export type PageStructOutput = [string, string, string] & {
     pageName: string;
-    pageId: BigNumber;
+    pageId: string;
     pageContent: string;
   };
 }
 
 export interface PubliusInterface extends utils.Interface {
   functions: {
-    "addChapter(string,string,uint256,string[],string[])": FunctionFragment;
-    "addPage(uint256,string,string)": FunctionFragment;
+    "addChapter(uint256,string,string,uint256,string[],string[],string[])": FunctionFragment;
+    "addPage(uint256,string,string,string)": FunctionFragment;
     "addSection(bytes,bytes,bytes)": FunctionFragment;
     "addressToString(address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
@@ -119,9 +119,11 @@ export interface PubliusInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "addChapter",
     values: [
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>[],
       PromiseOrValue<string>[],
       PromiseOrValue<string>[]
     ]
@@ -130,6 +132,7 @@ export interface PubliusInterface extends utils.Interface {
     functionFragment: "addPage",
     values: [
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
@@ -457,11 +460,13 @@ export interface Publius extends BaseContract {
 
   functions: {
     addChapter(
+      _sectionId: PromiseOrValue<BigNumberish>,
       _chapterName: PromiseOrValue<string>,
       _chapterImage: PromiseOrValue<string>,
       _chapterId: PromiseOrValue<BigNumberish>,
       _pageNames: PromiseOrValue<string>[],
       _pageContent: PromiseOrValue<string>[],
+      _pageIds: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -469,6 +474,7 @@ export interface Publius extends BaseContract {
       _chapter: PromiseOrValue<BigNumberish>,
       _pageName: PromiseOrValue<string>,
       _pageContent: PromiseOrValue<string>,
+      _pageId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -617,9 +623,9 @@ export interface Publius extends BaseContract {
     ): Promise<[BigNumber]>;
 
     tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<[string] & { uri: string }>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -637,11 +643,13 @@ export interface Publius extends BaseContract {
   };
 
   addChapter(
+    _sectionId: PromiseOrValue<BigNumberish>,
     _chapterName: PromiseOrValue<string>,
     _chapterImage: PromiseOrValue<string>,
     _chapterId: PromiseOrValue<BigNumberish>,
     _pageNames: PromiseOrValue<string>[],
     _pageContent: PromiseOrValue<string>[],
+    _pageIds: PromiseOrValue<string>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -649,6 +657,7 @@ export interface Publius extends BaseContract {
     _chapter: PromiseOrValue<BigNumberish>,
     _pageName: PromiseOrValue<string>,
     _pageContent: PromiseOrValue<string>,
+    _pageId: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -797,7 +806,7 @@ export interface Publius extends BaseContract {
   ): Promise<BigNumber>;
 
   tokenURI(
-    tokenId: PromiseOrValue<BigNumberish>,
+    _tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -817,11 +826,13 @@ export interface Publius extends BaseContract {
 
   callStatic: {
     addChapter(
+      _sectionId: PromiseOrValue<BigNumberish>,
       _chapterName: PromiseOrValue<string>,
       _chapterImage: PromiseOrValue<string>,
       _chapterId: PromiseOrValue<BigNumberish>,
       _pageNames: PromiseOrValue<string>[],
       _pageContent: PromiseOrValue<string>[],
+      _pageIds: PromiseOrValue<string>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -829,6 +840,7 @@ export interface Publius extends BaseContract {
       _chapter: PromiseOrValue<BigNumberish>,
       _pageName: PromiseOrValue<string>,
       _pageContent: PromiseOrValue<string>,
+      _pageId: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -975,7 +987,7 @@ export interface Publius extends BaseContract {
     ): Promise<BigNumber>;
 
     tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -1043,11 +1055,13 @@ export interface Publius extends BaseContract {
 
   estimateGas: {
     addChapter(
+      _sectionId: PromiseOrValue<BigNumberish>,
       _chapterName: PromiseOrValue<string>,
       _chapterImage: PromiseOrValue<string>,
       _chapterId: PromiseOrValue<BigNumberish>,
       _pageNames: PromiseOrValue<string>[],
       _pageContent: PromiseOrValue<string>[],
+      _pageIds: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1055,6 +1069,7 @@ export interface Publius extends BaseContract {
       _chapter: PromiseOrValue<BigNumberish>,
       _pageName: PromiseOrValue<string>,
       _pageContent: PromiseOrValue<string>,
+      _pageId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1190,7 +1205,7 @@ export interface Publius extends BaseContract {
     ): Promise<BigNumber>;
 
     tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1211,11 +1226,13 @@ export interface Publius extends BaseContract {
 
   populateTransaction: {
     addChapter(
+      _sectionId: PromiseOrValue<BigNumberish>,
       _chapterName: PromiseOrValue<string>,
       _chapterImage: PromiseOrValue<string>,
       _chapterId: PromiseOrValue<BigNumberish>,
       _pageNames: PromiseOrValue<string>[],
       _pageContent: PromiseOrValue<string>[],
+      _pageIds: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1223,6 +1240,7 @@ export interface Publius extends BaseContract {
       _chapter: PromiseOrValue<BigNumberish>,
       _pageName: PromiseOrValue<string>,
       _pageContent: PromiseOrValue<string>,
+      _pageId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1360,7 +1378,7 @@ export interface Publius extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

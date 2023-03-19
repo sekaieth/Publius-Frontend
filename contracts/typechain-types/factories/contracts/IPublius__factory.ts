@@ -11,7 +11,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_section",
+        name: "_sectionId",
         type: "uint256",
       },
       {
@@ -39,6 +39,11 @@ const _abi = [
         name: "_pageContent",
         type: "string[]",
       },
+      {
+        internalType: "string[]",
+        name: "_pageIds",
+        type: "string[]",
+      },
     ],
     name: "addChapter",
     outputs: [],
@@ -47,11 +52,6 @@ const _abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_section",
-        type: "uint256",
-      },
       {
         internalType: "uint256",
         name: "_chapter",
@@ -67,6 +67,11 @@ const _abi = [
         name: "_pageContent",
         type: "string",
       },
+      {
+        internalType: "string",
+        name: "_pageId",
+        type: "string",
+      },
     ],
     name: "addPage",
     outputs: [],
@@ -76,11 +81,98 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes",
+        name: "_sectionInfo",
+        type: "bytes",
+      },
+      {
+        internalType: "bytes",
+        name: "_chapterInfo",
+        type: "bytes",
+      },
+      {
+        internalType: "bytes",
+        name: "_pageInfo",
+        type: "bytes",
+      },
+    ],
+    name: "addSection",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
-        name: "tokenId",
+        name: "_chapter",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_pageId",
         type: "uint256",
       },
     ],
+    name: "getPage",
+    outputs: [
+      {
+        internalType: "string",
+        name: "pageName",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "pageId",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "pageContent",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_publicationAuthor",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "_publicationName",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_publicationCoverImage",
+        type: "string",
+      },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "mint",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "tokenURI",
     outputs: [
       {

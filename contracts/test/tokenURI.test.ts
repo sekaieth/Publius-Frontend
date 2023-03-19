@@ -1,12 +1,9 @@
-import { ethers, network, upgrades } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 import { expect } from 'chai';
 import { Publius } from '../typechain-types';
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import * as fs from 'fs';
 import { 
-  Chapter,
-  Page,
-  Section,
   Publication
 } from '../interfaces';
 
@@ -75,8 +72,47 @@ describe("Publius", function () {
                 }]
               }
             ]
+            },
+            {
+            sectionId: "2",
+            sectionName: "Section 2",
+            sectionImage: "",
+            chapters: [
+              {
+                chapterId: "3",
+                chapterName: "Chapter 3",
+                chapterImage: "",
+                pages: [{
+                  pageId: "5",
+                  pageName: "Page 5",
+                  pageContent: "Content 5"
+                },
+                {
+                  pageId: "6",
+                  pageName: "Page 6",
+                  pageContent: "Content 6"
+                }
+              ]
+              },
+              {
+                chapterId: "4",
+                chapterName: "Chapter 4",
+                chapterImage: "",
+                pages: [{
+                  pageId: "7",
+                  pageName: "Page 7",
+                  pageContent: "Content 7"
+                },
+                {
+                  pageId: "8",
+                  pageName: "Page 8",
+                  pageContent: "Content 8"
+                }
+              ]
+              }
+            ]
             }
-          ]
+          ],
       }
 
       encodedSections = ethers.utils.defaultAbiCoder.encode(
@@ -109,13 +145,14 @@ describe("Publius", function () {
             [
                 "string[][]",
                 "string[][]",
+                "string[][]"
             ],
             [
               publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageName)),
               publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageContent)),
+              publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageId)),
             ]
           ));
-
   });
 
   describe("addSection", function () {
@@ -132,56 +169,58 @@ describe("Publius", function () {
           encodedPages,
         );
         await addSectionTx.wait();
+      encodedSections = ethers.utils.defaultAbiCoder.encode(
+          [
+            "string",
+            "string",
+            "uint256",
+          ],
+          [
+            publication.sections[1].sectionName,
+            publication.sections[1].sectionImage,
+            publication.sections[1].sectionId,
+          ]
+        ); 
 
+        encodedChapters = ethers.utils.defaultAbiCoder.encode(
+          [
+              "string[]",
+              "string[]", 
+              "uint256[]",
+          ],
+          [
+            publication.sections[1].chapters.flatMap(chapter => chapter.chapterName),
+            publication.sections[1].chapters.flatMap(chapter => chapter.chapterImage),
+            publication.sections[1].chapters.flatMap(chapter => chapter.chapterId),
+          ]
+        );
+
+          encodedPages = (ethers.utils.defaultAbiCoder.encode(
+            [
+                "string[][]",
+                "string[][]",
+                "string[][]"
+            ],
+            [
+              publication.sections[1].chapters.map(chapter => chapter.pages.map(page => page.pageName)),
+              publication.sections[1].chapters.map(chapter => chapter.pages.map(page => page.pageContent)),
+              publication.sections[1].chapters.map(chapter => chapter.pages.map(page => page.pageId)),
+            ]
+          ));
+        const addSection2Tx = await publius.connect(author).addSection(
+          encodedSections,
+          encodedChapters,
+          encodedPages,
+        );
+        await addSection2Tx.wait();
         await publius.connect(deployer).mint(3, {value: ethers.utils.parseEther("0.03")});
             const tokenURI = await publius.tokenURI(1);
             fs.writeFile('tokenURI.json', tokenURI, function (err) {
                 if (err) throw err;
             });
-            // expect(JSON.parse(await publius.tokenURI(1))).to.equal(JSON.parse(JSON.stringify(publication)));
+
+        
+            expect(JSON.stringify(JSON.parse(await publius.tokenURI(1)))).to.equal(JSON.stringify(publication));
     });
-      // it("should add a new section with different chapter and page information", async function () {
-      // sectionToEncode  = {
-      //   sectionId: 2,
-      //   sectionName: "Section 2",
-      //   sectionImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
-      //   chapters: [
-      //     {
-      //       chapterId: 1,
-      //       chapterName: "Chapter 3",
-      //       chapterImage: "Chapter 3 Image",
-      //       pages: [{
-      //         pageName: "Page 5",
-      //         pageContent: "Content 5"
-      //       },
-      //       {
-      //         pageName: "Page 6",
-      //         pageContent: "Content 6"
-      //       }]
-      //     },
-      //     {
-      //       chapterId: 2,
-      //       chapterName: "Chapter 4",
-      //       chapterImage: "Chapter 4 Image",
-      //       pages: [{
-      //         pageName: "Page 7",
-      //         pageContent: "Content 7"
-      //       },
-      //       {
-      //         pageName: "Page 8",
-      //         pageContent: "Content 8"
-      //       }]
-      //     }
-      //   ]
-      // };
-      //   const addSectionTx = await authorWalletPublius.addSection(
-      //       encodedSection,
-      //       encodedChapters,
-      //       encodedPages
-      //   );
-      //   await addSectionTx.wait();
-      // });
-
-
     });
 });
