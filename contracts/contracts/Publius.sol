@@ -152,6 +152,7 @@ contract Publius is
         require(_pageIds.length != 0, "Publius: Page IDs cannot be empty");
         require(_pageContent.length != 0, "Publius: Page content cannot be empty");
         require(_pageNames.length == _pageContent.length, "Publius: Page names and content must be the same length");
+        require(_pageNames.length == _pageIds.length, "Publius: Page names and IDs must be the same length");
 
         Chapter storage chapter = chapters[_chapterId];
 
@@ -178,14 +179,16 @@ contract Publius is
      */
     function addPage(uint256 _chapter, string memory _pageName, string memory _pageContent, uint256 _pageId) public onlyOwner {
         // Ensure that the chapter exists
-        require(keccak256(abi.encode(chapters[_chapter].chapterName)) != keccak256(abi.encode("")), "Chapter does not exist");
-        require(keccak256(abi.encode(_pageName)) != keccak256(abi.encode("")), "Page name cannot be empty");
-        require(keccak256(abi.encode(_pageId)) != keccak256(abi.encode("")), "Page ID cannot be empty");
+        require(keccak256(abi.encode(chapters[_chapter].chapterName)) != keccak256(abi.encode("")), "Publius: Chapter does not exist");
+        require(keccak256(abi.encode(_pageName)) != keccak256(abi.encode("")), "Publius: Page name cannot be empty");
+        require(_pageId != 0, "Publius: Page ID cannot be 0");
+        require(keccak256(abi.encode(_pageContent)) != keccak256(abi.encode("")), "Publius: Page content cannot be empty");
+        require(chapters[_chapter].pages[_pageId].pageId == 0, "Publius: Page already exists");
 
         Chapter storage chapter = chapters[_chapter];
 
         // Add the new page to the chapter
-        chapter.pages[chapter.pageCount + 1] = (Page(
+        chapter.pages[_pageId] = (Page(
             _pageName,
             _pageId,
             _pageContent

@@ -4,50 +4,38 @@ import { expect } from 'chai';
 import { Publius } from '../typechain-types';
 import { Signer } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { Publication } from "../interfaces";
 
 
 
-describe('Test Adding A Chapter', () => {
- import { ethers, network, upgrades } from "hardhat";
-import { expect } from 'chai';
-import { Publius } from '../typechain-types';
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-
-import { 
-    Publication,
-} from '../interfaces';
-
-
-
-describe('Test Adding A Section', () => {
-    let publius: Publius;
-    let deployer: SignerWithAddress;
-    let author: SignerWithAddress;
-    let publicationName: string;
-    let publicationCoverImage: string;
-    let authorWalletPublius: Publius;
-    let publication: Publication;
-    let encodedSections: string; 
-    let encodedChapters: string;
-    let encodedPages: string;
-
+describe('Test Adding A Page', () => {
+  let publius: Publius;
+  let signers: SignerWithAddress[];
+  let deployer: SignerWithAddress;
+  let author: SignerWithAddress;
+  let publicationName: string;
+  let publicationCoverImage: string;
+  let authorWalletPublius: Publius;
+  let publication: Publication;
+  let encodedSections: string;
+  let encodedChapters: string;
+  let encodedPages: string;
 
   beforeEach(async () => {
     publicationName = 'Test Publication';
     publicationCoverImage = "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true" 
-    const signers: SignerWithAddress[] = await ethers.getSigners();
+    const signers = await ethers.getSigners();
     deployer = signers[0];
     author = signers[1];
-    const PubliusFactory = await ethers.getContractFactory('Publius');
-    publius = await upgrades.deployProxy(PubliusFactory, [ 
-      author.address,
+    const Publius = await ethers.getContractFactory('Publius');
+    publius = await upgrades.deployProxy(Publius, [ 
+      author.address, 
       'Test Publication', 
       publicationCoverImage 
     ]) as Publius;
     await publius.deployed();
 
     authorWalletPublius = publius.connect(signers[1]);
-
       publication = {
           publicationName: "Test Publication",
           authorName: author.address.toLowerCase(),
@@ -135,43 +123,161 @@ describe('Test Adding A Section', () => {
       }
 
       encodedSections = ethers.utils.defaultAbiCoder.encode(
-          [
-            "string",
-            "string",
-            "uint256",
-          ],
-          [
-            publication.sections[0].sectionName,
-            publication.sections[0].sectionImage,
-            publication.sections[0].sectionId,
-          ]
-        ); 
+        [
+          "string",
+          "string",
+          "uint256",
+        ],
+        [
+          publication.sections[0].sectionName,
+          publication.sections[0].sectionImage,
+          publication.sections[0].sectionId,
+        ]
+      ); 
 
-        encodedChapters = ethers.utils.defaultAbiCoder.encode(
-          [
-              "string[]",
-              "string[]", 
-              "uint256[]",
-          ],
-          [
-            publication.sections[0].chapters.flatMap(chapter => chapter.chapterName),
-            publication.sections[0].chapters.flatMap(chapter => chapter.chapterImage),
-            publication.sections[0].chapters.flatMap(chapter => chapter.chapterId),
-          ]
-        );
+      encodedChapters = ethers.utils.defaultAbiCoder.encode(
+        [
+            "string[]",
+            "string[]", 
+            "uint256[]",
+        ],
+        [
+          [publication.sections[0].chapters[0].chapterName],
+          [publication.sections[0].chapters[0].chapterImage],
+          [publication.sections[0].chapters[0].chapterId],
+        ]
+      );
 
-        encodedPages = (ethers.utils.defaultAbiCoder.encode(
+      encodedPages = (ethers.utils.defaultAbiCoder.encode(
           [
               "string[][]",
               "string[][]",
-              "string[][]"
+              "uint256[][]"
           ],
           [
-            publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageName)),
-            publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageContent)),
-            publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageId)),
+            [publication.sections[0].chapters[0].pages.map(page => page.pageName)],
+            [publication.sections[0].chapters[0].pages.map(page => page.pageContent)],
+            [publication.sections[0].chapters[0].pages.map(page => page.pageId)]
           ]
         ));
+        await publius.connect(author).addSection(
+          encodedSections,
+          encodedChapters,
+          encodedPages
+        );
+  });
+
+  describe("Test Revert Cases", () => {
+    it("Should revert if the sender is not the author of the publication", async () => {
+      const pageName = "Page 9";
+      const pageContent = "Content 9";
+      const pageId = 9;
+      await expect(
+        publius.connect(deployer).addPage(
+          1, 
+          pageName,
+          pageContent,
+          pageId
+        )
+      ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("should revert if the chapter does not exist", async () => {
+      const pageName = "Page 9";
+      const pageContent = "Content 9";
+      const pageId = 9;
+      await expect(
+        publius.connect(author).addPage(
+          3, 
+          pageName,
+          pageContent,
+          pageId
+        )
+      ).to.be.revertedWith("Publius: Chapter does not exist");
+    });
+
+    it("should revert if page name is empty", async () => {
+      const pageName = "";
+      const pageContent = "Content 9";
+      const pageId = 9;
+      await expect(
+        publius.connect(author).addPage(
+          1,
+          pageName,
+          pageContent,
+          pageId
+        )
+      ).to.be.revertedWith("Publius: Page name cannot be empty");
+    });
+
+    it("should revert if page content is empty", async () => {
+      const pageName = "Page 9";
+      const pageContent = "";
+      const pageId = 9;
+      await expect(
+        publius.connect(author).addPage(
+          1,
+          pageName,
+          pageContent,
+          pageId
+        )
+      ).to.be.revertedWith("Publius: Page content cannot be empty");
+    });
+
+    it("should revert if the page ID is 0", async () => {
+      const pageName = "Page 9";
+      const pageContent = "Content 9";
+      const pageId = 0;
+      await expect(
+        publius.connect(author).addPage(
+          1,
+          pageName,
+          pageContent,
+          pageId
+        )
+      ).to.be.revertedWith("Publius: Page ID cannot be 0");
+    });
+
+
+    it("should revert if the page already exists", async () => {
+      const pageName = "Page 9";
+      const pageContent = "Content 9";
+      const pageId = 9;
+
+      publius.connect(author).addPage(
+        1,
+        pageName,
+        pageContent,
+        pageId
+      );
+
+      await expect(
+        publius.connect(author).addPage(
+          1, 
+          pageName,
+          pageContent,
+          pageId
+        )
+      ).to.be.revertedWith("Publius: Page already exists");
+    });
+  });
+
+  describe("Test Adding A Page", () => {
+    it("Should add a page", async () => {
+      const pageName = "Page 9";
+      const pageContent = "Content 9";
+      const pageId = 9;
+      await publius.connect(author).addPage(
+        1, 
+        pageName,
+        pageContent,
+        pageId
+      );
+      const page = await publius.connect(author).getPage(1, 9);
+      expect(page.pageName).to.equal(pageName);
+      expect(page.pageContent).to.equal(pageContent);
+      expect(page.pageId).to.equal(pageId);
+    });
   });
 });
 
