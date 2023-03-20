@@ -313,8 +313,8 @@ describe('Test Adding A Chapter', () => {
         expect(chapter.chapterImage).to.equal(publication.sections[0].chapters[1].chapterImage);
         expect(chapter.pageCount).to.equal(publication.sections[0].chapters[1].pages.length);
 
-        for (let i = 0; i < publication.sections[0].chapters[1].pages.length; i++) {
-          const page = await publius.getPage(publication.sections[0].chapters[1].chapterId, i + 1);
+        for (let i = 1; i < publication.sections[0].chapters[1].pages.length; i++) {
+          const page = await publius.getPage(publication.sections[0].chapters[1].chapterId, publication.sections[0].chapters[1].pages[i].pageId);
           expect(page.pageName).to.equal(publication.sections[0].chapters[1].pages[i].pageName);
           expect(page.pageContent).to.equal(publication.sections[0].chapters[1].pages[i].pageContent);
         }
