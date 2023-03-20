@@ -147,6 +147,7 @@ contract Publius is
         chapter.chapterImage = _chapterImage;
 
         // Add pages to the chapter
+        console.log(_pageNames.length);
         for (uint256 i = 0; i < _pageNames.length; i++) {
             addPage(chapter.chapterId, _pageNames[i], _pageContent[i], _pageIds[i]);
         }
