@@ -145,7 +145,6 @@ contract Publius is
         chapter.chapterName = _chapterName;
         chapter.chapterId = _chapterId;
         chapter.chapterImage = _chapterImage;
-        chapter.pageCount = 1;
 
         // Add pages to the chapter
         for (uint256 i = 0; i < _pageNames.length; i++) {
@@ -168,7 +167,7 @@ contract Publius is
         Chapter storage chapter = chapters[_chapter];
 
         // Add the new page to the chapter
-        chapter.pages[chapter.pageCount] = (Page(
+        chapter.pages[chapter.pageCount + 1] = (Page(
             _pageName,
             _pageId,
             _pageContent
@@ -311,7 +310,7 @@ contract Publius is
                 ));
 
                 // Loop over pages
-                for (uint256 k = 1; k < chapter.pageCount; k++) {
+                for (uint256 k = 1; k <= chapter.pageCount; k++) {
                     // Get the page details
                     Page storage page = chapter.pages[k];
 
@@ -327,7 +326,7 @@ contract Publius is
                     ));
 
                     // Add a comma to separate pages
-                    if (k < chapter.pageCount - 1) {
+                    if (k < chapter.pageCount) {
                         pageJson = string(abi.encodePacked(pageJson, ","));
                     }
 

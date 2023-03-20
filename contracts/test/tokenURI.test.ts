@@ -218,9 +218,7 @@ describe("Publius", function () {
             fs.writeFile('tokenURI.json', tokenURI, function (err) {
                 if (err) throw err;
             });
-
-        
-            expect(JSON.stringify(JSON.parse(await publius.tokenURI(1)))).to.equal(JSON.stringify(publication));
+        expect(JSON.stringify(JSON.parse(await publius.tokenURI(1)))).to.equal(JSON.stringify(publication));
     });
     });
 });

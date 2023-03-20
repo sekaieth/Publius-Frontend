@@ -8,93 +8,171 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 
 describe('Test Adding A Chapter', () => {
-  let publius: Publius;
-  let signers: SignerWithAddress[];
-  let deployer: SignerWithAddress;
-  let author: SignerWithAddress;
-  let publicationName: string;
-  let publicationCoverImage: string;
-  let authorWalletPublius: Publius;
+ import { ethers, network, upgrades } from "hardhat";
+import { expect } from 'chai';
+import { Publius } from '../typechain-types';
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+
+import { 
+    Publication,
+} from '../interfaces';
+
+
+
+describe('Test Adding A Section', () => {
+    let publius: Publius;
+    let deployer: SignerWithAddress;
+    let author: SignerWithAddress;
+    let publicationName: string;
+    let publicationCoverImage: string;
+    let authorWalletPublius: Publius;
+    let publication: Publication;
+    let encodedSections: string; 
+    let encodedChapters: string;
+    let encodedPages: string;
 
 
   beforeEach(async () => {
     publicationName = 'Test Publication';
     publicationCoverImage = "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true" 
-    const signers = await ethers.getSigners();
+    const signers: SignerWithAddress[] = await ethers.getSigners();
     deployer = signers[0];
     author = signers[1];
-    const Publius = await ethers.getContractFactory('Publius');
-    publius = await upgrades.deployProxy(Publius, [ 
-      author.address, 
+    const PubliusFactory = await ethers.getContractFactory('Publius');
+    publius = await upgrades.deployProxy(PubliusFactory, [ 
+      author.address,
       'Test Publication', 
       publicationCoverImage 
     ]) as Publius;
     await publius.deployed();
 
     authorWalletPublius = publius.connect(signers[1]);
-  });
-    describe("addPage", function () {
-        const chapterId = 1;
-        const pageNames = ["Page 1", "Page 2", "Page 3"];
-        const pageContent = ["Content 1", "Content 2", "Content 3"];
-        let chapter;
-        let publiusAuthorConnect;
 
-
-        it("should not allow the owner to add a new page to a non-existent chapter", async function () {
-            const pageName = "Page 4";
-            const pageContent = "Content 4";
-
-            await expect(
-            publius.connect(author).addPage(chapterId + 1, pageName, pageContent)
-            ).to.be.revertedWith("Chapter does not exist");
-        });
-
-
-
-        it("should allow the owner to add a new page to a chapter", async function () {
-            // Add Chapter
-            const chapterName = "Chapter 1";
-            const chapterImage = "image1";
-            const chapterId = 1;
-            const pageNames = ["Page 1", "Page 2", "Page 3"];
-            const pageContent = ["Content 1", "Content 2", "Content 3"];
-
-            publiusAuthorConnect = publius.connect(author)
-            await publiusAuthorConnect.addChapter(chapterName, chapterImage, chapterId, pageNames, pageContent);
-
-            chapter = await publiusAuthorConnect.chapters(chapterId);
-            expect(chapter.chapterId).to.equal(chapterId);
-            expect(chapter.chapterName).to.equal(chapterName);
-            expect(chapter.chapterImage).to.equal(chapterImage);
-            expect(chapter.pageCount).to.equal(pageNames.length);
-
-            for (let i = 0; i < pageNames.length; i++) {
-                const page = await publiusAuthorConnect.getPage(chapterId, i + 1);
-                expect(page.pageName).to.equal(pageNames[i]);
-                expect(page.pageContent).to.equal(pageContent[i]);
+      publication = {
+          publicationName: "Test Publication",
+          authorName: author.address.toLowerCase(),
+          coverImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
+          sections: [
+              {
+            sectionId: "1",
+            sectionName: "Section 1",
+            sectionImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
+            chapters: [
+              {
+                chapterId: "1",
+                chapterName: "Chapter 1",
+                chapterImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
+                pages: [
+                  {
+                    pageId: "1",
+                    pageName: "Page 1",
+                    pageContent: "Content 1"
+                  },
+                  {
+                  pageId: "2",
+                  pageName: "Page 2",
+                  pageContent: "Content 2"
+                  }
+                ]
+              },
+              {
+                chapterId: "2",
+                chapterName: "Chapter 2",
+                chapterImage: "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true",
+                pages: [{
+                  pageId: "3",
+                  pageName: "Page 3",
+                  pageContent: "Content 3"
+                },
+                {
+                  pageId: "4",
+                  pageName: "Page 4",
+                  pageContent: "Content 4"
+                }]
+              }
+            ]
+            },
+            {
+            sectionId: "2",
+            sectionName: "Section 2",
+            sectionImage: "",
+            chapters: [
+              {
+                chapterId: "3",
+                chapterName: "Chapter 3",
+                chapterImage: "",
+                pages: [{
+                  pageId: "5",
+                  pageName: "Page 5",
+                  pageContent: "Content 5"
+                },
+                {
+                  pageId: "6",
+                  pageName: "Page 6",
+                  pageContent: "Content 6"
+                }
+              ]
+              },
+              {
+                chapterId: "4",
+                chapterName: "Chapter 4",
+                chapterImage: "",
+                pages: [{
+                  pageId: "7",
+                  pageName: "Page 7",
+                  pageContent: "Content 7"
+                },
+                {
+                  pageId: "8",
+                  pageName: "Page 8",
+                  pageContent: "Content 8"
+                }
+              ]
+              }
+            ]
             }
+          ],
+      }
 
-            // Add Page
-            await publiusAuthorConnect.addPage(chapterId, "Page 4", "Content 4");
+      encodedSections = ethers.utils.defaultAbiCoder.encode(
+          [
+            "string",
+            "string",
+            "uint256",
+          ],
+          [
+            publication.sections[0].sectionName,
+            publication.sections[0].sectionImage,
+            publication.sections[0].sectionId,
+          ]
+        ); 
 
-            chapter = await publiusAuthorConnect.chapters(chapterId);
-            expect(chapter.pageCount).to.equal(pageNames.length + 1);
+        encodedChapters = ethers.utils.defaultAbiCoder.encode(
+          [
+              "string[]",
+              "string[]", 
+              "uint256[]",
+          ],
+          [
+            publication.sections[0].chapters.flatMap(chapter => chapter.chapterName),
+            publication.sections[0].chapters.flatMap(chapter => chapter.chapterImage),
+            publication.sections[0].chapters.flatMap(chapter => chapter.chapterId),
+          ]
+        );
 
-            const page = await publiusAuthorConnect.getPage(chapterId, pageNames.length + 1);
-            expect(page.pageName).to.equal("Page 4");
-            expect(page.pageContent).to.equal("Content 4");
-        });
-
-        it("should not allow a non-owner to add a new page", async function () {
-            const pageName = "Page 4";
-            const pageContent = "Content 4";
-
-            await expect(
-            publius.connect(deployer).addPage(chapterId, pageName, pageContent)
-            ).to.be.revertedWith("Ownable: caller is not the owner");
-        });
-    });
+        encodedPages = (ethers.utils.defaultAbiCoder.encode(
+          [
+              "string[][]",
+              "string[][]",
+              "string[][]"
+          ],
+          [
+            publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageName)),
+            publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageContent)),
+            publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageId)),
+          ]
+        ));
+  });
 });
 
     
