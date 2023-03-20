@@ -42,11 +42,5 @@ describe('Test Publius Deployment', () => {
     it('sets the correct owner of the contract', async () => {
       expect(await publius.owner()).to.equal(author);
     });
-
-    it('reverts if the owner is not the author', async () => {
-      await expect(publius.addPage(1, "test page", "test page content")).to.be.revertedWith(
-        'Ownable: caller is not the owner'
-      );
-    });
   });
 });

@@ -224,13 +224,14 @@ describe('Test Adding A Section', () => {
 
           // Verify Chapter Information
           const chapter = await publius.chapters(publication.sections[0].chapters[0].chapterId);
+          const chapterIds = await publius.getPageIds(chapter.chapterId); 
           expect(chapter.chapterId).to.equal(publication.sections[0].chapters[0].chapterId);
           expect(chapter.chapterName).to.equal(publication.sections[0].chapters[0].chapterName);
           expect(chapter.chapterImage).to.equal(publication.sections[0].chapters[0].chapterImage);
-          expect(chapter.pageCount).to.equal(publication.sections[0].chapters[0].pages.length);
+          expect(chapterIds.length).to.equal(publication.sections[0].chapters[0].pages.length);
 
           // Verify Page Information
-          for (let i = 1; i < chapter.pageCount.toNumber(); i++) {
+          for (let i = 1; i < chapterIds.length; i++) {
             const page = await publius.getPage(chapter.chapterId, publication.sections[0].chapters[0].pages[i].pageId);
             expect(page.pageName).to.equal(publication.sections[0].chapters[0].pages[i].pageName);
             expect(page.pageContent).to.equal(publication.sections[0].chapters[0].pages[i].pageContent);

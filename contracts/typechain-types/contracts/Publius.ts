@@ -53,6 +53,7 @@ export interface PubliusInterface extends utils.Interface {
     "chapters(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getPage(uint256,uint256)": FunctionFragment;
+    "getPageIds(uint256)": FunctionFragment;
     "initialize(address,string,string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(uint256)": FunctionFragment;
@@ -90,6 +91,7 @@ export interface PubliusInterface extends utils.Interface {
       | "chapters"
       | "getApproved"
       | "getPage"
+      | "getPageIds"
       | "initialize"
       | "isApprovedForAll"
       | "mint"
@@ -168,6 +170,10 @@ export interface PubliusInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getPage",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPageIds",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -289,6 +295,7 @@ export interface PubliusInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPage", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getPageIds", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
@@ -523,6 +530,11 @@ export interface Publius extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[Publius.PageStructOutput]>;
 
+    getPageIds(
+      _chapter: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
     initialize(
       _publicationAuthor: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
@@ -705,6 +717,11 @@ export interface Publius extends BaseContract {
     overrides?: CallOverrides
   ): Promise<Publius.PageStructOutput>;
 
+  getPageIds(
+    _chapter: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
   initialize(
     _publicationAuthor: PromiseOrValue<string>,
     _publicationName: PromiseOrValue<string>,
@@ -886,6 +903,11 @@ export interface Publius extends BaseContract {
       _pageId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<Publius.PageStructOutput>;
+
+    getPageIds(
+      _chapter: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
 
     initialize(
       _publicationAuthor: PromiseOrValue<string>,
@@ -1109,6 +1131,11 @@ export interface Publius extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getPageIds(
+      _chapter: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     initialize(
       _publicationAuthor: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
@@ -1277,6 +1304,11 @@ export interface Publius extends BaseContract {
     getPage(
       _chapter: PromiseOrValue<BigNumberish>,
       _pageId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPageIds(
+      _chapter: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

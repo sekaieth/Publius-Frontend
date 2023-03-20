@@ -212,6 +212,16 @@ contract Publius is
     }
 
     /**
+     * @dev Get the ids of all pages in the specified chapter
+     * @param _chapter The id of the chapter
+     * @return pageIds The ids of all pages in the specified chapter
+     */
+    function getPageIds(uint256 _chapter) public view returns (uint256[] memory) {
+        Chapter storage chapter = chapters[_chapter];
+        return chapter.pageIds;
+    }
+
+    /**
      * @dev Helper function to convert a uint to a string
      * @param num The uint to convert
      * @return str The string representation of the input uint
