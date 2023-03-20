@@ -54,7 +54,7 @@ contract Publius is
 	/// @dev Page struct definition
 	struct Page {
 		string pageName;
-		string pageId;
+		uint256 pageId;
 		string pageContent;
 	}
 
@@ -97,6 +97,9 @@ contract Publius is
             uint256 _sectionId
         ) = abi.decode(_sectionInfo, (string, string, uint256));
         
+        require(_sectionId != 0, "Publius: Section ID cannot be 0");
+        require(keccak256(abi.encode(_sectionName)) != keccak256(abi.encode("")), "Publius: Section name cannot be empty");
+
         // Decode chapter info
         (
             string[] memory _chapterNames, 
@@ -104,19 +107,23 @@ contract Publius is
             uint256[] memory _chapterIds 
         ) = abi.decode(_chapterInfo, (string[], string[], uint256[]));
 
+        require(_chapterIds.length != 0, "Publius: Chapter IDs cannot be empty");
+        require(_chapterNames.length != 0, "Publius: Chapter names cannot be empty");
         // Decode page info
         (
             string[][] memory _pageNames, 
             string[][] memory _pageContent,
-            string[][] memory _pageIds
-        ) = abi.decode(_pageInfo, (string[][], string[][], string[][]));
+            uint256[][] memory _pageIds
+        ) = abi.decode(_pageInfo, (string[][], string[][], uint256[][]));
         
+        require(_pageNames.length != 0, "Publius: Page names cannot be empty");
+        require(_pageIds.length != 0, "Publius: Page IDs cannot be empty");
+    
         // Fill in section data
         Section storage newSection = sections[sectionCount + 1];
         newSection.sectionName = _sectionName;
         newSection.sectionId = _sectionId;
         newSection.sectionImage = _sectionImage;
-        newSection.chapters = _chapterIds;
 
         // Load each chapter with pages
         for(uint256 i = 0; i < _chapterIds.length; i++) {
@@ -135,19 +142,26 @@ contract Publius is
      * @param _pageContent Array of page content
      * @param _pageIds Array of page ids
      */
-    function addChapter(uint256 _sectionId, string memory _chapterName, string memory _chapterImage, uint256 _chapterId, string[] memory _pageNames, string[] memory _pageContent, string[] memory _pageIds) public onlyOwner {
+    function addChapter(uint256 _sectionId, string memory _chapterName, string memory _chapterImage, uint256 _chapterId, string[] memory _pageNames, string[] memory _pageContent, uint256[] memory _pageIds) public onlyOwner {
         // Require that the section exists
-        require(sections[_sectionId].sectionId != 0, "Section does not exist");
-        require(chapters[_chapterId].chapterId == 0 || !isChapterInSection(_chapterId, _sectionId), "Chapter already exists");
+        require(sections[_sectionId].sectionId != 0, "Publius: Section does not exist");
+        require(chapters[_chapterId].chapterId == 0 || !isChapterInSection(_chapterId, _sectionId), "Publius: Chapter already exists");
+        require(_chapterId != 0, "Publius: Chapter ID cannot be 0");
+        require(keccak256(abi.encode(_chapterName)) != keccak256(abi.encode("")), "Publius: Chapter name cannot be empty");
+        require(_pageNames.length != 0, "Publius: Page names cannot be empty");
+        require(_pageIds.length != 0, "Publius: Page IDs cannot be empty");
+        require(_pageContent.length != 0, "Publius: Page content cannot be empty");
+        require(_pageNames.length == _pageContent.length, "Publius: Page names and content must be the same length");
+
         Chapter storage chapter = chapters[_chapterId];
 
         // Fill in chapter data
         chapter.chapterName = _chapterName;
         chapter.chapterId = _chapterId;
         chapter.chapterImage = _chapterImage;
+        sections[_sectionId].chapters.push(_chapterId);
 
         // Add pages to the chapter
-        console.log(_pageNames.length);
         for (uint256 i = 0; i < _pageNames.length; i++) {
             addPage(chapter.chapterId, _pageNames[i], _pageContent[i], _pageIds[i]);
         }
@@ -162,9 +176,12 @@ contract Publius is
      * @param _pageContent The content of the page
      * @param _pageId The id of the page
      */
-    function addPage(uint256 _chapter, string memory _pageName, string memory _pageContent, string memory _pageId) public onlyOwner {
+    function addPage(uint256 _chapter, string memory _pageName, string memory _pageContent, uint256 _pageId) public onlyOwner {
         // Ensure that the chapter exists
         require(keccak256(abi.encode(chapters[_chapter].chapterName)) != keccak256(abi.encode("")), "Chapter does not exist");
+        require(keccak256(abi.encode(_pageName)) != keccak256(abi.encode("")), "Page name cannot be empty");
+        require(keccak256(abi.encode(_pageId)) != keccak256(abi.encode("")), "Page ID cannot be empty");
+
         Chapter storage chapter = chapters[_chapter];
 
         // Add the new page to the chapter
@@ -318,7 +335,7 @@ contract Publius is
                     // Add page details to JSON
                     string memory pageJson = string(abi.encodePacked(
                         '{ "pageId": "',
-                        page.pageId,
+                        uint2str(page.pageId),
                         '", "pageName": "',
                         page.pageName,
                         '", "pageContent": "',

@@ -16,7 +16,9 @@ describe('Test Adding A Chapter', () => {
   let publicationCoverImage: string;
   let authorWalletPublius: Publius;
   let publication: Publication;
-
+  let encodedSections: string;
+  let encodedChapters: string;
+  let encodedPages: string;
 
   beforeEach(async () => {
     publicationName = 'Test Publication';
@@ -118,109 +120,205 @@ describe('Test Adding A Chapter', () => {
             }
           ],
       }
+
+      encodedSections = ethers.utils.defaultAbiCoder.encode(
+        [
+          "string",
+          "string",
+          "uint256",
+        ],
+        [
+          publication.sections[0].sectionName,
+          publication.sections[0].sectionImage,
+          publication.sections[0].sectionId,
+        ]
+      ); 
+
+      encodedChapters = ethers.utils.defaultAbiCoder.encode(
+        [
+            "string[]",
+            "string[]", 
+            "uint256[]",
+        ],
+        [
+          [publication.sections[0].chapters[0].chapterName],
+          [publication.sections[0].chapters[0].chapterImage],
+          [publication.sections[0].chapters[0].chapterId],
+        ]
+      );
+
+      encodedPages = (ethers.utils.defaultAbiCoder.encode(
+          [
+              "string[][]",
+              "string[][]",
+              "uint256[][]"
+          ],
+          [
+            [publication.sections[0].chapters[0].pages.map(page => page.pageName)],
+            [publication.sections[0].chapters[0].pages.map(page => page.pageContent)],
+            [publication.sections[0].chapters[0].pages.map(page => page.pageId)]
+          ]
+        ));
+        await publius.connect(author).addSection(
+          encodedSections,
+          encodedChapters,
+          encodedPages
+        );
   });
 
   describe("addChapter", function () {
 
-    it("should not allow the owner to add a new chapter if the section does not exist", async function () {
-      await expect(
-        publius.connect(author).addChapter(
-        publication.sections[0].sectionId,
-        publication.sections[0].chapters[0].chapterName,
-        publication.sections[0].chapters[0].chapterImage,
-        publication.sections[0].chapters[0].chapterId,
-        publication.sections[0].chapters[0].pages.map((page) => page.pageName),
-        publication.sections[0].chapters[0].pages.map((page) => page.pageContent),
-        publication.sections[0].chapters[0].pages.map((page) => page.pageId)
-      )).to.be.revertedWith("Section does not exist");
-    });
+    describe("Test reverts", function () {
 
-    it("should allow the owner to add a new chapter", async function () {
-       // Encode data to add section 
-        const encodedSections = ethers.utils.defaultAbiCoder.encode(
-          [
-            "string",
-            "string",
-            "uint256",
-          ],
-          [
-            publication.sections[0].sectionName,
-            publication.sections[0].sectionImage,
-            publication.sections[0].sectionId,
-          ]
-        ); 
+      it("should not allow a non-owner to add a new chapter", async function () {
+        await expect(
+        publius.connect(deployer).addChapter(
+          publication.sections[1].sectionId,
+          publication.sections[1].chapters[0].chapterName,
+          publication.sections[1].chapters[0].chapterImage,
+          publication.sections[1].chapters[0].chapterId,
+          publication.sections[1].chapters[0].pages.map((page) => page.pageName),
+          publication.sections[1].chapters[0].pages.map((page) => page.pageContent),
+          publication.sections[1].chapters[0].pages.map((page) => page.pageId)
+        )
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+      });
 
-        const encodedChapters = ethers.utils.defaultAbiCoder.encode(
-          [
-              "string[]",
-              "string[]", 
-              "uint256[]",
-          ],
-          [
-            [publication.sections[0].chapters[0].chapterName],
-            [publication.sections[0].chapters[0].chapterImage],
-            [publication.sections[0].chapters[0].chapterId],
-          ]
-        );
+      it("should not allow the owner to add a new chapter if the section does not exist", async function () {
+        await expect(
+          publius.connect(author).addChapter(
+          publication.sections[1].sectionId,
+          publication.sections[1].chapters[0].chapterName,
+          publication.sections[1].chapters[0].chapterImage,
+          publication.sections[1].chapters[0].chapterId,
+          publication.sections[1].chapters[0].pages.map((page) => page.pageName),
+          publication.sections[1].chapters[0].pages.map((page) => page.pageContent),
+          publication.sections[1].chapters[0].pages.map((page) => page.pageId)
+        )).to.be.revertedWith("Publius: Section does not exist");
+      });
 
-        const encodedPages = (ethers.utils.defaultAbiCoder.encode(
-            [
-                "string[][]",
-                "string[][]",
-                "string[][]"
-            ],
-            [
-              [publication.sections[0].chapters[0].pages.map(page => page.pageName)],
-              [publication.sections[0].chapters[0].pages.map(page => page.pageContent)],
-              [publication.sections[0].chapters[0].pages.map(page => page.pageId)]
+      it("should not allow the owner to add a new chapter if the chapter already exists", async function () {
+        await expect(
+          publius.connect(author).addChapter(
+          publication.sections[0].sectionId,
+          publication.sections[0].chapters[0].chapterName,
+          publication.sections[0].chapters[0].chapterImage,
+          publication.sections[0].chapters[0].chapterId,
+          publication.sections[0].chapters[0].pages.map((page) => page.pageName),
+          publication.sections[0].chapters[0].pages.map((page) => page.pageContent),
+          publication.sections[0].chapters[0].pages.map((page) => page.pageId)
+        )).to.be.revertedWith("Publius: Chapter already exists");
+      });
 
-            ]
-          ));
-      
-      // Add a section
-      await publius.connect(author).addSection(
-        encodedSections,
-        encodedChapters,
-        encodedPages
-      );
+      it("should not allow the owner to add a new chapter if the chapter id is 0", async function () {
+        await expect(
+          publius.connect(author).addChapter(
+          publication.sections[0].sectionId,
+          publication.sections[0].chapters[0].chapterName,
+          publication.sections[0].chapters[0].chapterImage,
+          "0",
+          publication.sections[0].chapters[0].pages.map((page) => page.pageName),
+          publication.sections[0].chapters[0].pages.map((page) => page.pageContent),
+          publication.sections[0].chapters[0].pages.map((page) => page.pageId)
+        )).to.be.revertedWith("Publius: Chapter ID cannot be 0");
+      });
 
-      // Add a chapter
-      await publius.connect(author).addChapter(
-        publication.sections[0].sectionId,
-        publication.sections[0].chapters[1].chapterName,
-        publication.sections[0].chapters[1].chapterImage,
-        publication.sections[0].chapters[1].chapterId,
-        publication.sections[0].chapters[1].pages.map((page) => page.pageName),
-        publication.sections[0].chapters[1].pages.map((page) => page.pageContent),
-        publication.sections[0].chapters[1].pages.map((page) => page.pageId)
-      );
 
- /* Getting the first chapter of the second section of the publication and then getting each page of
- that chapter. */
-      const chapter = await publius.chapters(publication.sections[0].chapters[1].chapterId);
-      expect(chapter.chapterName).to.equal(publication.sections[0].chapters[1].chapterName);
-      expect(chapter.chapterImage).to.equal(publication.sections[0].chapters[1].chapterImage);
-      expect(chapter.pageCount).to.equal(publication.sections[0].chapters[1].pages.length);
+      it("should not allow the owner to add a new chapter if the chapter name is empty", async function () {
 
-      for (let i = 0; i < publication.sections[1].chapters[1].pages.length; i++) {
-        const page = await publius.getPage(publication.sections[0].chapters[1].chapterId, i);
-        expect(page.pageName).to.equal(publication.sections[0].chapters[1].pages[i].pageName);
-        expect(page.pageContent).to.equal(publication.sections[0].chapters[1].pages[i].pageContent);
-      }
-    });
+        await expect(
+          publius.connect(author).addChapter(
+          publication.sections[0].sectionId,
+          "",
+          publication.sections[0].chapters[1].chapterImage,
+          publication.sections[0].chapters[1].chapterId,
+          publication.sections[0].chapters[1].pages.map((page) => page.pageName),
+          publication.sections[0].chapters[1].pages.map((page) => page.pageContent),
+          publication.sections[0].chapters[1].pages.map((page) => page.pageId)
+        )).to.be.revertedWith("Publius: Chapter name cannot be empty");
+      });
 
-    it("should not allow a non-owner to add a new chapter", async function () {
-      await expect(
-      publius.connect(author).addChapter(
-        publication.sections[1].sectionId,
-        publication.sections[1].chapters[0].chapterName,
-        publication.sections[1].chapters[0].chapterImage,
-        publication.sections[1].chapters[0].chapterId,
-        publication.sections[1].chapters[0].pages.map((page) => page.pageName),
-        publication.sections[1].chapters[0].pages.map((page) => page.pageContent),
-        publication.sections[1].chapters[0].pages.map((page) => page.pageId)
-      )
-      ).to.be.revertedWith("Ownable: caller is not the owner");
+      it("should not allow the owner to add a new chapter if the page names array is empty", async function () {
+        await expect(
+          publius.connect(author).addChapter(
+          publication.sections[0].sectionId,
+          publication.sections[0].chapters[1].chapterName,
+          publication.sections[0].chapters[1].chapterImage,
+          publication.sections[0].chapters[1].chapterId,
+          [],
+          publication.sections[0].chapters[1].pages.map((page) => page.pageContent),
+          publication.sections[0].chapters[1].pages.map((page) => page.pageId)
+        )).to.be.revertedWith("Publius: Page names cannot be empty");
+      });
+
+      it("should not allow the owner to add a new chapter if the page IDs array is empty", async function () {
+        await expect(
+          publius.connect(author).addChapter(
+          publication.sections[0].sectionId,
+          publication.sections[0].chapters[1].chapterName,
+          publication.sections[0].chapters[1].chapterImage,
+          publication.sections[0].chapters[1].chapterId,
+          publication.sections[0].chapters[1].pages.map((page) => page.pageName),
+          publication.sections[0].chapters[1].pages.map((page) => page.pageContent),
+          []
+        )).to.be.revertedWith("Publius: Page IDs cannot be empty");
+      });
+
+      it("should not allow the owner to add a new chapter if the page contents array is empty", async function () {
+        await expect(
+          publius.connect(author).addChapter(
+          publication.sections[0].sectionId,
+          publication.sections[0].chapters[1].chapterName,
+          publication.sections[0].chapters[1].chapterImage,
+          publication.sections[0].chapters[1].chapterId,
+          publication.sections[0].chapters[1].pages.map((page) => page.pageName),
+          [],
+          publication.sections[0].chapters[1].pages.map((page) => page.pageId)
+        )).to.be.revertedWith("Publius: Page content cannot be empty");
+      });
+
+      it("should not allow the owner to add a new chapter if the page names array is not the same length as the page IDs array", async function () {
+        await expect(
+          publius.connect(author).addChapter(
+          publication.sections[0].sectionId,
+          publication.sections[0].chapters[1].chapterName,
+          publication.sections[0].chapters[1].chapterImage,
+          publication.sections[0].chapters[1].chapterId,
+          publication.sections[0].chapters[1].pages.map((page) => page.pageName),
+          ["test", "test", "test", "test", "test"],
+          publication.sections[0].chapters[1].pages.map((page) => page.pageId)
+        )).to.be.revertedWith("Publius: Page names and content must be the same length");
     });
   });
-})
+
+    describe("Test Successful Chapter Addition", function () {
+      it("should allow the owner to add a new chapter", async function () {
+        // Add a chapter
+        const sendChapter = await publius.connect(author).addChapter(
+          publication.sections[0].sectionId,
+          publication.sections[0].chapters[1].chapterName,
+          publication.sections[0].chapters[1].chapterImage,
+          publication.sections[0].chapters[1].chapterId,
+          publication.sections[0].chapters[1].pages.map((page) => page.pageName),
+          publication.sections[0].chapters[1].pages.map((page) => page.pageContent),
+          publication.sections[0].chapters[1].pages.map((page) => page.pageId)
+        );
+        sendChapter.wait();
+
+  /* Getting the first chapter of the second section of the publication and then getting each page of
+  that chapter. */
+
+        const chapter = await publius.chapters(parseInt(publication.sections[0].chapters[1].chapterId));
+        expect(chapter.chapterName).to.equal(publication.sections[0].chapters[1].chapterName);
+        expect(chapter.chapterImage).to.equal(publication.sections[0].chapters[1].chapterImage);
+        expect(chapter.pageCount).to.equal(publication.sections[0].chapters[1].pages.length);
+
+        for (let i = 0; i < publication.sections[0].chapters[1].pages.length; i++) {
+          const page = await publius.getPage(publication.sections[0].chapters[1].chapterId, i + 1);
+          expect(page.pageName).to.equal(publication.sections[0].chapters[1].pages[i].pageName);
+          expect(page.pageContent).to.equal(publication.sections[0].chapters[1].pages[i].pageContent);
+        }
+      });
+    });
+  });
+});
