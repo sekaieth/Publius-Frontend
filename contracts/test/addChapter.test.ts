@@ -308,7 +308,7 @@ describe('Test Adding A Chapter', () => {
   /* Getting the first chapter of the second section of the publication and then getting each page of
   that chapter. */
 
-        const chapter = await publius.chapters(parseInt(publication.sections[0].chapters[1].chapterId));
+        const chapter = await publius.chapters(publication.sections[0].chapters[1].chapterId);
         expect(chapter.chapterName).to.equal(publication.sections[0].chapters[1].chapterName);
         expect(chapter.chapterImage).to.equal(publication.sections[0].chapters[1].chapterImage);
         expect(chapter.pageCount).to.equal(publication.sections[0].chapters[1].pages.length);

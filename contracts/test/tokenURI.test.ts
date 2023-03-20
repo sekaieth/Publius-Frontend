@@ -145,7 +145,7 @@ describe("Publius", function () {
             [
                 "string[][]",
                 "string[][]",
-                "string[][]"
+                "uint256[][]"
             ],
             [
               publication.sections[0].chapters.map(chapter => chapter.pages.map(page => page.pageName)),
@@ -199,7 +199,7 @@ describe("Publius", function () {
             [
                 "string[][]",
                 "string[][]",
-                "string[][]"
+                "uint256[][]"
             ],
             [
               publication.sections[1].chapters.map(chapter => chapter.pages.map(page => page.pageName)),

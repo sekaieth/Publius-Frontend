@@ -38,8 +38,8 @@
       ]
     },
     "/Users/logan.delafosse/github/Publius/contracts/contracts/Publius.sol": {
-      "lastModificationDate": 1679343513274,
-      "contentHash": "95453b92576af9bcfe3c197358107eed",
+      "lastModificationDate": 1679346026770,
+      "contentHash": "fcfe6fbd604ef86573c09c29b6944639",
       "sourceName": "contracts/Publius.sol",
       "solcConfig": {
         "version": "0.8.18",

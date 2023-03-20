@@ -48,7 +48,7 @@ contract Publius is
 		uint256 chapterId;
 		string chapterImage;
 		mapping(uint256 => Page) pages;
-		uint256 pageCount;
+        uint256[] pageIds;
 	}
 
 	/// @dev Page struct definition
@@ -90,6 +90,10 @@ contract Publius is
  * @param _pageInfo Encoded information about the pages (pageNames[][], pageContent[][], pageIds[][])
  */
     function addSection(bytes calldata _sectionInfo, bytes calldata _chapterInfo, bytes calldata _pageInfo) public onlyOwner {
+        require(_sectionInfo.length != 0, "Publius: Section info cannot be empty");
+        require(_chapterInfo.length != 0, "Publius: Chapter info cannot be empty");
+        require(_pageInfo.length != 0, "Publius: Page info cannot be empty");
+        
         // Decode Section Info
         (
             string memory _sectionName, 
@@ -193,7 +197,7 @@ contract Publius is
             _pageId,
             _pageContent
         ));
-        chapter.pageCount++;
+        chapter.pageIds.push(_pageId);
     }
 
     /**
@@ -331,9 +335,9 @@ contract Publius is
                 ));
 
                 // Loop over pages
-                for (uint256 k = 1; k <= chapter.pageCount; k++) {
+                for (uint256 k = 0; k < chapter.pageIds.length; k++) {
                     // Get the page details
-                    Page storage page = chapter.pages[k];
+                    Page storage page = chapter.pages[chapter.pageIds[k]];
 
                     // Add page details to JSON
                     string memory pageJson = string(abi.encodePacked(
@@ -347,7 +351,7 @@ contract Publius is
                     ));
 
                     // Add a comma to separate pages
-                    if (k < chapter.pageCount) {
+                    if (k < chapter.pageIds.length - 1) {
                         pageJson = string(abi.encodePacked(pageJson, ","));
                     }
 

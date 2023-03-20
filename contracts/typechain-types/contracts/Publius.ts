@@ -505,11 +505,10 @@ export interface Publius extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, BigNumber, string, BigNumber] & {
+      [string, BigNumber, string] & {
         chapterName: string;
         chapterId: BigNumber;
         chapterImage: string;
-        pageCount: BigNumber;
       }
     >;
 
@@ -688,11 +687,10 @@ export interface Publius extends BaseContract {
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
-    [string, BigNumber, string, BigNumber] & {
+    [string, BigNumber, string] & {
       chapterName: string;
       chapterId: BigNumber;
       chapterImage: string;
-      pageCount: BigNumber;
     }
   >;
 
@@ -871,11 +869,10 @@ export interface Publius extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, BigNumber, string, BigNumber] & {
+      [string, BigNumber, string] & {
         chapterName: string;
         chapterId: BigNumber;
         chapterImage: string;
-        pageCount: BigNumber;
       }
     >;
 
