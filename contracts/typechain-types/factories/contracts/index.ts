@@ -3,3 +3,5 @@
 /* eslint-disable */
 export { IPublius__factory } from "./IPublius__factory";
 export { Publius__factory } from "./Publius__factory";
+export { PubliusBeacon__factory } from "./PubliusBeacon__factory";
+export { PubliusFactory__factory } from "./PubliusFactory__factory";

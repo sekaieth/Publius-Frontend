@@ -5,32 +5,34 @@ import { BeaconProxy } from "@openzeppelin/contracts/proxy/beacon/BeaconProxy.so
 import "./PubliusBeacon.sol";
 import "./Publius.sol";
 
-contract PubliusFactory is BeaconProxy {
+contract PubliusFactory {
 
     mapping(uint256 => address) private publications;
 
     PubliusBeacon immutable beacon;
     
-    constructor(address _beacon) {
-        beacon = new PubliusBeacon(_beacon);
+    constructor(address _publiusImpl) {
+        beacon = new PubliusBeacon(_publiusImpl);
     }
 
-    function createPublication(uint256 _id, 
+    function createPublication(
+        uint256 _id, 
         address _publicationAuthor, 
         string calldata _publicationName, 
-        string calldata _publicationCoverImage)
-        public {
+        string calldata _publicationCoverImage
+    ) public returns (address) {
         require(publications[_id] == address(0), "PubliusFactory: Publication already exists");
         BeaconProxy publication = new BeaconProxy(
             address(beacon), 
             abi.encodeWithSelector(
-                Publius.initialize.selector, 
+                Publius(address(0)).initialize.selector,
                 _id,
                 _publicationAuthor, 
                 _publicationName, 
                 _publicationCoverImage
         ));
         publications[_id] = address(publication);
+        return address(publication);
     }
 
     function getPublicationAddress(uint256 _id) public view returns (address) {
@@ -44,4 +46,5 @@ contract PubliusFactory is BeaconProxy {
     function getImplementation() public view returns (address) {
         return beacon.publiusImpl();
     }
+
 }

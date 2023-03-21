@@ -66,6 +66,7 @@ contract Publius is
 		__ERC721_init(_publicationName, "PUBLIUS");
 		__Ownable_init();
 		transferOwnership(_publicationAuthor);
+        publicationId = _publicationId;
 		publicationName = _publicationName;
 		publicationAuthor = _publicationAuthor;
 		publicationCoverImage = _publicationCoverImage;
