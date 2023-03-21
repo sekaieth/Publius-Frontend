@@ -4,7 +4,6 @@ pragma solidity 0.8.18;
 import { ERC721EnumerableUpgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import { BeaconProxy } from "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import { Base64 } from "@openzeppelin/contracts/utils/Base64.sol";
 import "hardhat/console.sol";
 
@@ -18,6 +17,7 @@ contract Publius is
 	OwnableUpgradeable {
 	
 	// GLOBAL STATE
+    uint256 public publicationId;
 
 	/// @notice Track who owns what token ID
 	mapping(uint256 => address) public tokenIdToMinter;
@@ -62,7 +62,7 @@ contract Publius is
 	/// @param _publicationAuthor The author of the publication
 	/// @param _publicationName The name of the publication
 	/// @param _publicationCoverImage The cover image of the publication
-	function initialize(address _publicationAuthor, string calldata _publicationName, string calldata _publicationCoverImage) public initializer {
+	function initialize(uint256 _publicationId, address _publicationAuthor, string calldata _publicationName, string calldata _publicationCoverImage) public initializer {
 		__ERC721_init(_publicationName, "PUBLIUS");
 		__Ownable_init();
 		transferOwnership(_publicationAuthor);
