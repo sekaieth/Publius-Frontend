@@ -58,6 +58,9 @@ export interface PubliusInterface extends utils.Interface {
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(uint256)": FunctionFragment;
     "minterOwnedTokens(address,uint256)": FunctionFragment;
+    "modifyChapter(uint256,string,string)": FunctionFragment;
+    "modifyPage(uint256,uint256,string,string)": FunctionFragment;
+    "modifySection(uint256,string,string)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -96,6 +99,9 @@ export interface PubliusInterface extends utils.Interface {
       | "isApprovedForAll"
       | "mint"
       | "minterOwnedTokens"
+      | "modifyChapter"
+      | "modifyPage"
+      | "modifySection"
       | "name"
       | "owner"
       | "ownerOf"
@@ -194,6 +200,31 @@ export interface PubliusInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "minterOwnedTokens",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "modifyChapter",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "modifyPage",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "modifySection",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -304,6 +335,15 @@ export interface PubliusInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "minterOwnedTokens",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "modifyChapter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "modifyPage", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "modifySection",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -559,6 +599,28 @@ export interface Publius extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    modifyChapter(
+      _chapterId: PromiseOrValue<BigNumberish>,
+      _newChapterName: PromiseOrValue<string>,
+      _newChapterImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    modifyPage(
+      _chapterId: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
+      _newPageName: PromiseOrValue<string>,
+      _newPageContent: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    modifySection(
+      _sectionId: PromiseOrValue<BigNumberish>,
+      _newSectionName: PromiseOrValue<string>,
+      _newSectionImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
@@ -746,6 +808,28 @@ export interface Publius extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  modifyChapter(
+    _chapterId: PromiseOrValue<BigNumberish>,
+    _newChapterName: PromiseOrValue<string>,
+    _newChapterImage: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  modifyPage(
+    _chapterId: PromiseOrValue<BigNumberish>,
+    _pageId: PromiseOrValue<BigNumberish>,
+    _newPageName: PromiseOrValue<string>,
+    _newPageContent: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  modifySection(
+    _sectionId: PromiseOrValue<BigNumberish>,
+    _newSectionName: PromiseOrValue<string>,
+    _newSectionImage: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
@@ -932,6 +1016,28 @@ export interface Publius extends BaseContract {
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    modifyChapter(
+      _chapterId: PromiseOrValue<BigNumberish>,
+      _newChapterName: PromiseOrValue<string>,
+      _newChapterImage: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    modifyPage(
+      _chapterId: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
+      _newPageName: PromiseOrValue<string>,
+      _newPageContent: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    modifySection(
+      _sectionId: PromiseOrValue<BigNumberish>,
+      _newSectionName: PromiseOrValue<string>,
+      _newSectionImage: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -1160,6 +1266,28 @@ export interface Publius extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    modifyChapter(
+      _chapterId: PromiseOrValue<BigNumberish>,
+      _newChapterName: PromiseOrValue<string>,
+      _newChapterImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    modifyPage(
+      _chapterId: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
+      _newPageName: PromiseOrValue<string>,
+      _newPageContent: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    modifySection(
+      _sectionId: PromiseOrValue<BigNumberish>,
+      _newSectionName: PromiseOrValue<string>,
+      _newSectionImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1334,6 +1462,28 @@ export interface Publius extends BaseContract {
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    modifyChapter(
+      _chapterId: PromiseOrValue<BigNumberish>,
+      _newChapterName: PromiseOrValue<string>,
+      _newChapterImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    modifyPage(
+      _chapterId: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
+      _newPageName: PromiseOrValue<string>,
+      _newPageContent: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    modifySection(
+      _sectionId: PromiseOrValue<BigNumberish>,
+      _newSectionName: PromiseOrValue<string>,
+      _newSectionImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;

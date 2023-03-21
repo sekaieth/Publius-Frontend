@@ -38,8 +38,8 @@
       ]
     },
     "/Users/logan.delafosse/github/Publius/contracts/contracts/Publius.sol": {
-      "lastModificationDate": 1679346438411,
-      "contentHash": "c4440adfc3bf9b8141eec17888b363ef",
+      "lastModificationDate": 1679414068353,
+      "contentHash": "18a1218c1e7bd7b494ca1e981d435f1f",
       "sourceName": "contracts/Publius.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -70,7 +70,7 @@
         "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
         "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
         "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol",
-        "base64-sol/base64.sol",
+        "@openzeppelin/contracts/utils/Base64.sol",
         "hardhat/console.sol"
       ],
       "versionPragmas": [
@@ -798,42 +798,6 @@
         "StorageSlot"
       ]
     },
-    "/Users/logan.delafosse/github/Publius/contracts/node_modules/base64-sol/base64.sol": {
-      "lastModificationDate": 1678810570304,
-      "contentHash": "0d54cb6a748ddde95d92ed7802c9248d",
-      "sourceName": "base64-sol/base64.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "storageLayout"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0"
-      ],
-      "artifacts": [
-        "Base64"
-      ]
-    },
     "/Users/logan.delafosse/github/Publius/contracts/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol": {
       "lastModificationDate": 1678756045423,
       "contentHash": "84e3aaecd9d661d539dd5c41faf2c02b",
@@ -946,6 +910,42 @@
       ],
       "artifacts": [
         "console"
+      ]
+    },
+    "/Users/logan.delafosse/github/Publius/contracts/node_modules/@openzeppelin/contracts/utils/Base64.sol": {
+      "lastModificationDate": 1679326947275,
+      "contentHash": "8f868da0a90e46a85baa348a896d1702",
+      "sourceName": "@openzeppelin/contracts/utils/Base64.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Base64"
       ]
     }
   }

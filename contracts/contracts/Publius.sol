@@ -5,7 +5,7 @@ import { ERC721EnumerableUpgradeable } from "@openzeppelin/contracts-upgradeable
 import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { BeaconProxy } from "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
-import 'base64-sol/base64.sol';
+import { Base64 } from "@openzeppelin/contracts/utils/Base64.sol";
 import "hardhat/console.sol";
 
 /// @title Publius - Publication management on the blockchain
@@ -137,6 +137,24 @@ contract Publius is
     }
 
     /**
+     * @notice Modify an existing section in the publication
+     * @param _sectionId The ID of the section to modify
+     * @param _newSectionName The new name of the section
+     * @param _newSectionImage The new image of the section
+     */
+    function modifySection(uint256 _sectionId, string calldata _newSectionName, string calldata _newSectionImage) public onlyOwner {
+        // Ensure that the section exists
+        require(sections[_sectionId].sectionId != 0, "Publius: Section does not exist");
+        require(keccak256(abi.encode(_newSectionName)) != keccak256(abi.encode("")), "Publius: New section name cannot be empty");
+        require(keccak256(abi.encode(_newSectionImage)) != keccak256(abi.encode("")), "Publius: New section image cannot be empty");
+
+        // Update the section data
+        Section storage section = sections[_sectionId];
+        section.sectionName = _newSectionName;
+        section.sectionImage = _newSectionImage;
+    }
+
+    /**
      * @dev Add a new chapter to the publication
      * @param _sectionId The id of the section the chapter belongs to
      * @param _chapterName The name of the chapter
@@ -170,9 +188,27 @@ contract Publius is
         for (uint256 i = 0; i < _pageNames.length; i++) {
             addPage(chapter.chapterId, _pageNames[i], _pageContent[i], _pageIds[i]);
         }
-
-
     }
+
+    /**
+     * @dev Modify an existing chapter's data
+     * @param _chapterId The id of the chapter to modify
+     * @param _newChapterName The new name for the chapter
+     * @param _newChapterImage The new image for the chapter
+     */
+    function modifyChapter(uint256 _chapterId, string memory _newChapterName, string memory _newChapterImage) public onlyOwner {
+        // Ensure that the chapter exists
+        require(chapters[_chapterId].chapterId != 0, "Publius: Chapter does not exist");
+        require(keccak256(abi.encode(_newChapterName)) != keccak256(abi.encode("")), "Publius: New chapter name cannot be empty");
+        require(keccak256(abi.encode(_newChapterImage)) != keccak256(abi.encode("")), "Publius: New chapter image cannot be empty");
+
+        Chapter storage chapter = chapters[_chapterId];
+
+        // Update the chapter's data
+        chapter.chapterName = _newChapterName;
+        chapter.chapterImage = _newChapterImage;
+    }
+
 
     /**
      * @dev Add a new page to the publication
@@ -198,6 +234,28 @@ contract Publius is
             _pageContent
         ));
         chapter.pageIds.push(_pageId);
+    }
+
+    /**
+     * @dev Modify an existing page's data
+     * @param _chapterId The id of the chapter the page belongs to
+     * @param _pageId The id of the page to modify
+     * @param _newPageName The new name for the page
+     * @param _newPageContent The new content for the page
+     */
+    function modifyPage(uint256 _chapterId, uint256 _pageId, string memory _newPageName, string memory _newPageContent) public onlyOwner {
+        // Ensure that the chapter exists
+        require(chapters[_chapterId].chapterId != 0, "Publius: Chapter does not exist");
+        // Ensure that the page exists
+        require(chapters[_chapterId].pages[_pageId].pageId != 0, "Publius: Page does not exist");
+        require(keccak256(abi.encode(_newPageName)) != keccak256(abi.encode("")), "Publius: New page name cannot be empty");
+        require(keccak256(abi.encode(_newPageContent)) != keccak256(abi.encode("")), "Publius: New page content cannot be empty");
+
+        Chapter storage chapter = chapters[_chapterId];
+
+        // Update the page's data
+        chapter.pages[_pageId].pageName = _newPageName;
+        chapter.pages[_pageId].pageContent = _newPageContent;
     }
 
     /**
@@ -395,9 +453,12 @@ contract Publius is
         // Close the sections array
         json = string(abi.encodePacked(json, "]}"));
 
+        // Base64 encode the JSON string
+        bytes memory jsonBytes = bytes(json);
+        string memory encodedJson = Base64.encode(jsonBytes);
 
-        // Concatenate the base URI and the JSON structure to form the complete URI
-        string memory baseURI = _baseURI();
-        return string(abi.encodePacked(baseURI, json));
+        // Construct the data URI string
+        return string(abi.encodePacked("data:application/json;base64,", encodedJson));
+
 	}
 }
