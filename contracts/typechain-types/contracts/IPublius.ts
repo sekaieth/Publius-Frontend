@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -25,13 +26,24 @@ import type {
 
 export interface IPubliusInterface extends utils.Interface {
   functions: {
-    "addChapter(uint256,string,string,uint256,string[],string[])": FunctionFragment;
-    "addPage(uint256,uint256,string,string)": FunctionFragment;
-    "tokenURI(uint256)": FunctionFragment;
+    "addChapter(uint256,string,string,uint256,string[],string[],string[])": FunctionFragment;
+    "addPage(uint256,string,string,string)": FunctionFragment;
+    "addSection(bytes,bytes,bytes)": FunctionFragment;
+    "getPage(uint256,uint256)": FunctionFragment;
+    "initialize(address,string,string)": FunctionFragment;
+    "mint(uint256)": FunctionFragment;
+    "tokenURI()": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "addChapter" | "addPage" | "tokenURI"
+    nameOrSignatureOrTopic:
+      | "addChapter"
+      | "addPage"
+      | "addSection"
+      | "getPage"
+      | "initialize"
+      | "mint"
+      | "tokenURI"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -42,6 +54,7 @@ export interface IPubliusInterface extends utils.Interface {
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>[],
+      PromiseOrValue<string>[],
       PromiseOrValue<string>[]
     ]
   ): string;
@@ -49,18 +62,43 @@ export interface IPubliusInterface extends utils.Interface {
     functionFragment: "addPage",
     values: [
       PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "tokenURI",
+    functionFragment: "addSection",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPage",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mint",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "tokenURI", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "addChapter", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "addPage", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "addSection", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getPage", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
 
   events: {};
@@ -94,126 +132,259 @@ export interface IPublius extends BaseContract {
 
   functions: {
     addChapter(
-      _section: PromiseOrValue<BigNumberish>,
+      _sectionId: PromiseOrValue<BigNumberish>,
       _chapterName: PromiseOrValue<string>,
       _chapterImage: PromiseOrValue<string>,
       _chapterId: PromiseOrValue<BigNumberish>,
       _pageNames: PromiseOrValue<string>[],
       _pageContent: PromiseOrValue<string>[],
+      _pageIds: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     addPage(
-      _section: PromiseOrValue<BigNumberish>,
       _chapter: PromiseOrValue<BigNumberish>,
       _pageName: PromiseOrValue<string>,
       _pageContent: PromiseOrValue<string>,
+      _pageId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+    addSection(
+      _sectionInfo: PromiseOrValue<BytesLike>,
+      _chapterInfo: PromiseOrValue<BytesLike>,
+      _pageInfo: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getPage(
+      _chapter: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<
+      [string, string, string] & {
+        pageName: string;
+        pageId: string;
+        pageContent: string;
+      }
+    >;
+
+    initialize(
+      _publicationAuthor: PromiseOrValue<string>,
+      _publicationName: PromiseOrValue<string>,
+      _publicationCoverImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    mint(
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    tokenURI(overrides?: CallOverrides): Promise<[string]>;
   };
 
   addChapter(
-    _section: PromiseOrValue<BigNumberish>,
+    _sectionId: PromiseOrValue<BigNumberish>,
     _chapterName: PromiseOrValue<string>,
     _chapterImage: PromiseOrValue<string>,
     _chapterId: PromiseOrValue<BigNumberish>,
     _pageNames: PromiseOrValue<string>[],
     _pageContent: PromiseOrValue<string>[],
+    _pageIds: PromiseOrValue<string>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   addPage(
-    _section: PromiseOrValue<BigNumberish>,
     _chapter: PromiseOrValue<BigNumberish>,
     _pageName: PromiseOrValue<string>,
     _pageContent: PromiseOrValue<string>,
+    _pageId: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  tokenURI(
-    tokenId: PromiseOrValue<BigNumberish>,
+  addSection(
+    _sectionInfo: PromiseOrValue<BytesLike>,
+    _chapterInfo: PromiseOrValue<BytesLike>,
+    _pageInfo: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getPage(
+    _chapter: PromiseOrValue<BigNumberish>,
+    _pageId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<string>;
+  ): Promise<
+    [string, string, string] & {
+      pageName: string;
+      pageId: string;
+      pageContent: string;
+    }
+  >;
+
+  initialize(
+    _publicationAuthor: PromiseOrValue<string>,
+    _publicationName: PromiseOrValue<string>,
+    _publicationCoverImage: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  mint(
+    _amount: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  tokenURI(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     addChapter(
-      _section: PromiseOrValue<BigNumberish>,
+      _sectionId: PromiseOrValue<BigNumberish>,
       _chapterName: PromiseOrValue<string>,
       _chapterImage: PromiseOrValue<string>,
       _chapterId: PromiseOrValue<BigNumberish>,
       _pageNames: PromiseOrValue<string>[],
       _pageContent: PromiseOrValue<string>[],
+      _pageIds: PromiseOrValue<string>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     addPage(
-      _section: PromiseOrValue<BigNumberish>,
       _chapter: PromiseOrValue<BigNumberish>,
       _pageName: PromiseOrValue<string>,
       _pageContent: PromiseOrValue<string>,
+      _pageId: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+    addSection(
+      _sectionInfo: PromiseOrValue<BytesLike>,
+      _chapterInfo: PromiseOrValue<BytesLike>,
+      _pageInfo: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<void>;
+
+    getPage(
+      _chapter: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string] & {
+        pageName: string;
+        pageId: string;
+        pageContent: string;
+      }
+    >;
+
+    initialize(
+      _publicationAuthor: PromiseOrValue<string>,
+      _publicationName: PromiseOrValue<string>,
+      _publicationCoverImage: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    mint(
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    tokenURI(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
 
   estimateGas: {
     addChapter(
-      _section: PromiseOrValue<BigNumberish>,
+      _sectionId: PromiseOrValue<BigNumberish>,
       _chapterName: PromiseOrValue<string>,
       _chapterImage: PromiseOrValue<string>,
       _chapterId: PromiseOrValue<BigNumberish>,
       _pageNames: PromiseOrValue<string>[],
       _pageContent: PromiseOrValue<string>[],
+      _pageIds: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     addPage(
-      _section: PromiseOrValue<BigNumberish>,
       _chapter: PromiseOrValue<BigNumberish>,
       _pageName: PromiseOrValue<string>,
       _pageContent: PromiseOrValue<string>,
+      _pageId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+    addSection(
+      _sectionInfo: PromiseOrValue<BytesLike>,
+      _chapterInfo: PromiseOrValue<BytesLike>,
+      _pageInfo: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getPage(
+      _chapter: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    initialize(
+      _publicationAuthor: PromiseOrValue<string>,
+      _publicationName: PromiseOrValue<string>,
+      _publicationCoverImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    mint(
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    tokenURI(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     addChapter(
-      _section: PromiseOrValue<BigNumberish>,
+      _sectionId: PromiseOrValue<BigNumberish>,
       _chapterName: PromiseOrValue<string>,
       _chapterImage: PromiseOrValue<string>,
       _chapterId: PromiseOrValue<BigNumberish>,
       _pageNames: PromiseOrValue<string>[],
       _pageContent: PromiseOrValue<string>[],
+      _pageIds: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     addPage(
-      _section: PromiseOrValue<BigNumberish>,
       _chapter: PromiseOrValue<BigNumberish>,
       _pageName: PromiseOrValue<string>,
       _pageContent: PromiseOrValue<string>,
+      _pageId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+    addSection(
+      _sectionInfo: PromiseOrValue<BytesLike>,
+      _chapterInfo: PromiseOrValue<BytesLike>,
+      _pageInfo: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getPage(
+      _chapter: PromiseOrValue<BigNumberish>,
+      _pageId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _publicationAuthor: PromiseOrValue<string>,
+      _publicationName: PromiseOrValue<string>,
+      _publicationCoverImage: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mint(
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    tokenURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
