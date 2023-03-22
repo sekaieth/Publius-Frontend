@@ -24,8 +24,8 @@ describe('Test Adding A Chapter', () => {
     publicationName = 'Test Publication';
     publicationCoverImage = "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true" 
     const signers = await ethers.getSigners();
-    deployer = signers[0];
-    author = signers[1];
+    [deployer, author]= await ethers.getSigners();
+
     
     // Deploy the implementation contract
     const Publius = await ethers.getContractFactory('Publius');
@@ -38,7 +38,7 @@ describe('Test Adding A Chapter', () => {
     await factory.deployed();
 
     // Deploy the first publication
-    const deployPublication = await factory.createPublication(1, author, publicationName, publicationCoverImage);
+    const deployPublication = await factory.createPublication(1, author.address, publicationName, publicationCoverImage);
     await deployPublication.wait();
 
     publius = await ethers.getContractAt('Publius', await factory.getPublicationAddress(1)) as Publius;

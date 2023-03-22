@@ -1,6 +1,6 @@
 import { ethers, upgrades } from "hardhat";
 import { expect } from 'chai';
-import { Publius } from '../typechain-types';
+import { Publius, PubliusFactory } from '../typechain-types';
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import * as fs from 'fs';
 import { 
@@ -17,16 +17,34 @@ describe("Publius", function () {
   let encodedChapters: string;
   let encodedSections: string;
   let encodedPages: string; 
+  let publicationName: string;
+  let publicationCoverImage: string;
+  let factory: PubliusFactory;
 
   beforeEach(async function () {
     [deployer, author] = await ethers.getSigners();
-    const PubliusFactory = await ethers.getContractFactory('Publius');
-    publius = await upgrades.deployProxy(PubliusFactory, [ 
-      author.address, 
-      'Test Publication', 
-      "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true" 
-    ]) as Publius;
-    await publius.deployed();
+
+      publicationName = 'Test Publication';
+      publicationCoverImage = "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true";
+      [deployer, author]= await ethers.getSigners();
+
+
+      // Deploy the implementation contract
+      const Publius = await ethers.getContractFactory('Publius');
+      const publiusInstance = await Publius.deploy();
+      await publiusInstance.deployed();
+
+      // Deploy the factory contract, which will also deploy the Beacon contract
+      const PubliusFactory = await ethers.getContractFactory('PubliusFactory');
+      factory = await PubliusFactory.deploy(publiusInstance.address);
+      await factory.deployed();
+
+      // Deploy the first publication
+      const deployPublication = await factory.createPublication(1, author.address, publicationName, publicationCoverImage);
+      await deployPublication.wait();
+
+      publius = await ethers.getContractAt('Publius', await factory.getPublicationAddress(1)) as Publius;
+
 
 
       publication = {
