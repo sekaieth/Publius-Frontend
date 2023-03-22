@@ -1,0 +1,43 @@
+import React, { useState } from 'react';
+import './inputForm.css';
+
+interface InputFormProps {
+  label: string;
+}
+
+export default function InputForm({ label }: InputFormProps) {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(event.target.value);
+  };
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // console.log('Input value:', inputValue);
+    try {
+      const parsedJSON = JSON.parse(inputValue);
+      console.log(parsedJSON);
+      const stringifyJSON = JSON.stringify(parsedJSON);
+      console.log(stringifyJSON);
+    } catch (error) {
+      console.error('Invalid Input', error);
+    }
+  };
+
+  return (
+    <form className="input-form" onSubmit={handleSubmit}>
+      <label htmlFor="input-text" className="input-form__label">
+        Input JSON:
+        <textarea
+          id="input-text"
+          value={inputValue}
+          onChange={handleInputChange}
+          className="input-form__input"
+        />
+      </label>
+      <button type="submit" className="input-form__button">
+        Submit
+      </button>
+    </form>
+  );
+}
