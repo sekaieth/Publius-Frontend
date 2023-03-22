@@ -1,6 +1,7 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getRoot, LexicalEditor } from "lexical";
+import { $getRoot, $getSelection, $getTextContent, $insertNodes, LexicalEditor, TextNode } from "lexical";
 import React from "react";
+import { DateTimeNode } from "./DateTimeNode";
 import "./DateTimePlugin.css"
 
 interface DateTimeProps{
@@ -30,7 +31,17 @@ function DateTimeComponent({
 function useDateTimeComponent(editor:LexicalEditor,date:Date):JSX.Element {
   const onCalendarIconClick =() => {
     editor.update(()=>{
-     const node = new TextNode() 
+      const node = new TextNode(date.toLocaleString())
+      node.setStyle("color:red; text-decoration:underline;text-decoration:border")
+      const devilNode = new TextNode(" ❡ ")
+      const newNode = new DateTimeNode (date.toLocaleString());
+      const nodes = [node,devilNode,newNode]
+      const selection = $getSelection();
+      if (selection?.getTextContent()){
+        selection.insertText
+      } else{
+        $insertNodes(nodes) 
+      }
     })
   }
 return <DateTimeComponent onCalendarIconClick={onCalendarIconClick} date={date}/>

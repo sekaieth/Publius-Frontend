@@ -45,7 +45,7 @@ h1 {
 }
 
 .editor-container {
-  background: #fff;
+  background:linear-gradient(to bottom left,#E100FF, blue, yellow, );
   margin: 20px auto 20px auto;
   border-radius: 2px;
   max-width: 600px;
