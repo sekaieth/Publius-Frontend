@@ -1,3 +1,5 @@
+const { off } = require("process");
+
 module.exports = {
   env: {
     browser: true,
@@ -20,7 +22,10 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'prettier'],
   rules: {
+    'eslint-disable-next-line import/prefer-default-export': 0,
+    'no-extraneous-dependencies': off ,
+    'eslint-disable-next-line react-hooks': 0,
     'react/react-in-jsx-scope': 0,
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: false }],
   },
 };
