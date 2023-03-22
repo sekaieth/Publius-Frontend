@@ -1,15 +1,14 @@
 import { ethers, network, upgrades } from "hardhat";
 import { expect } from 'chai';
-import { Publius } from '../typechain-types';
+import { Publius, PubliusFactory } from '../typechain-types';
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-
 import { 
     Publication,
 } from '../interfaces';
 
 
 
-describe('Test Adding A Section', () => {
+describe('Test Modifying A Chapter', () => {
     let publius: Publius;
     let deployer: SignerWithAddress;
     let author: SignerWithAddress;
@@ -20,23 +19,31 @@ describe('Test Adding A Section', () => {
     let encodedSections: string; 
     let encodedChapters: string;
     let encodedPages: string;
+    let factory: PubliusFactory;
 
 
   beforeEach(async () => {
-    publicationName = 'Test Publication';
-    publicationCoverImage = "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true" 
-    const signers: SignerWithAddress[] = await ethers.getSigners();
-    deployer = signers[0];
-    author = signers[1];
-    const PubliusFactory = await ethers.getContractFactory('Publius');
-    publius = await upgrades.deployProxy(PubliusFactory, [ 
-      author.address,
-      'Test Publication', 
-      publicationCoverImage 
-    ]) as Publius;
-    await publius.deployed();
+      publicationName = 'Test Publication';
+      publicationCoverImage = "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true";
+      [deployer, author]= await ethers.getSigners();
 
-    authorWalletPublius = publius.connect(signers[1]);
+      // Deploy the implementation contract
+      const Publius = await ethers.getContractFactory('Publius');
+      const publiusInstance = await Publius.deploy();
+      await publiusInstance.deployed();
+
+      // Deploy the factory contract, which will also deploy the Beacon contract
+      const PubliusFactory = await ethers.getContractFactory('PubliusFactory');
+      factory = await PubliusFactory.deploy(publiusInstance.address);
+      await factory.deployed();
+
+      // Deploy the first publication
+      const deployPublication = await factory.createPublication(1, author.address, publicationName, publicationCoverImage);
+      await deployPublication.wait();
+
+      publius = await ethers.getContractAt('Publius', await factory.getPublicationAddress(1)) as Publius;
+
+    authorWalletPublius = publius.connect(author);
 
       publication = {
           publicationName: "Test Publication",
