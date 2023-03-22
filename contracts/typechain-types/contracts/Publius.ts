@@ -54,7 +54,7 @@ export interface PubliusInterface extends utils.Interface {
     "getApproved(uint256)": FunctionFragment;
     "getPage(uint256,uint256)": FunctionFragment;
     "getPageIds(uint256)": FunctionFragment;
-    "initialize(address,string,string)": FunctionFragment;
+    "initialize(uint256,address,string,string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(uint256)": FunctionFragment;
     "minterOwnedTokens(address,uint256)": FunctionFragment;
@@ -66,6 +66,7 @@ export interface PubliusInterface extends utils.Interface {
     "ownerOf(uint256)": FunctionFragment;
     "publicationAuthor()": FunctionFragment;
     "publicationCoverImage()": FunctionFragment;
+    "publicationId()": FunctionFragment;
     "publicationName()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
@@ -107,6 +108,7 @@ export interface PubliusInterface extends utils.Interface {
       | "ownerOf"
       | "publicationAuthor"
       | "publicationCoverImage"
+      | "publicationId"
       | "publicationName"
       | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
@@ -184,6 +186,7 @@ export interface PubliusInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "initialize",
     values: [
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>
@@ -238,6 +241,10 @@ export interface PubliusInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "publicationCoverImage",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "publicationId",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -355,6 +362,10 @@ export interface PubliusInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "publicationCoverImage",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "publicationId",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -576,6 +587,7 @@ export interface Publius extends BaseContract {
     ): Promise<[BigNumber[]]>;
 
     initialize(
+      _publicationId: PromiseOrValue<BigNumberish>,
       _publicationAuthor: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
@@ -633,6 +645,8 @@ export interface Publius extends BaseContract {
     publicationAuthor(overrides?: CallOverrides): Promise<[string]>;
 
     publicationCoverImage(overrides?: CallOverrides): Promise<[string]>;
+
+    publicationId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     publicationName(overrides?: CallOverrides): Promise<[string]>;
 
@@ -785,6 +799,7 @@ export interface Publius extends BaseContract {
   ): Promise<BigNumber[]>;
 
   initialize(
+    _publicationId: PromiseOrValue<BigNumberish>,
     _publicationAuthor: PromiseOrValue<string>,
     _publicationName: PromiseOrValue<string>,
     _publicationCoverImage: PromiseOrValue<string>,
@@ -842,6 +857,8 @@ export interface Publius extends BaseContract {
   publicationAuthor(overrides?: CallOverrides): Promise<string>;
 
   publicationCoverImage(overrides?: CallOverrides): Promise<string>;
+
+  publicationId(overrides?: CallOverrides): Promise<BigNumber>;
 
   publicationName(overrides?: CallOverrides): Promise<string>;
 
@@ -994,6 +1011,7 @@ export interface Publius extends BaseContract {
     ): Promise<BigNumber[]>;
 
     initialize(
+      _publicationId: PromiseOrValue<BigNumberish>,
       _publicationAuthor: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
@@ -1051,6 +1069,8 @@ export interface Publius extends BaseContract {
     publicationAuthor(overrides?: CallOverrides): Promise<string>;
 
     publicationCoverImage(overrides?: CallOverrides): Promise<string>;
+
+    publicationId(overrides?: CallOverrides): Promise<BigNumber>;
 
     publicationName(overrides?: CallOverrides): Promise<string>;
 
@@ -1243,6 +1263,7 @@ export interface Publius extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
+      _publicationId: PromiseOrValue<BigNumberish>,
       _publicationAuthor: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
@@ -1300,6 +1321,8 @@ export interface Publius extends BaseContract {
     publicationAuthor(overrides?: CallOverrides): Promise<BigNumber>;
 
     publicationCoverImage(overrides?: CallOverrides): Promise<BigNumber>;
+
+    publicationId(overrides?: CallOverrides): Promise<BigNumber>;
 
     publicationName(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1441,6 +1464,7 @@ export interface Publius extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
+      _publicationId: PromiseOrValue<BigNumberish>,
       _publicationAuthor: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
@@ -1500,6 +1524,8 @@ export interface Publius extends BaseContract {
     publicationCoverImage(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    publicationId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     publicationName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

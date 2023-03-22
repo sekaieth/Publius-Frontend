@@ -3,3 +3,5 @@
 /* eslint-disable */
 export type { IPublius } from "./IPublius";
 export type { Publius } from "./Publius";
+export type { PubliusBeacon } from "./PubliusBeacon";
+export type { PubliusFactory } from "./PubliusFactory";
