@@ -14,6 +14,7 @@ import TreeViewPlugin from './TreeviewPlugin';
 import React from 'react';
 import AutoFocusPlugin from './AutoFocusPlugin';
 import { DateTimePlugin } from './DateTimePlugin';
+import { DateTimeNode } from './DateTimeNode';
 
 const theme = {
   // Theme styling goes here
@@ -44,6 +45,9 @@ export function Editor() {
     namespace: 'MyEditor',
     theme,
     onError,
+    nodes: [
+      DateTimeNode
+    ]
   };
 
   return (
