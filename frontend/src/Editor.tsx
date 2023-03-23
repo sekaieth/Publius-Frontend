@@ -15,6 +15,8 @@ import React from 'react';
 import AutoFocusPlugin from './AutoFocusPlugin';
 import { DateTimePlugin } from './DateTimePlugin';
 import { DateTimeNode } from './DateTimeNode';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import PubliusLogo from "../../Publius-Transparent-White.png"
 
 const theme = {
   // Theme styling goes here
@@ -51,6 +53,13 @@ export function Editor() {
   };
 
   return (
+    <>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "3%" }}>
+        <ConnectButton />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center"}}>
+        <img src={PubliusLogo}></img>
+      </div>
     <LexicalComposer initialConfig={initialConfig}>
       <section className='editor-container'>
       <DateTimePlugin date= {new Date()}/>
@@ -67,5 +76,6 @@ export function Editor() {
         </section>
       </section>
     </LexicalComposer>
+    </>
   );
 };
