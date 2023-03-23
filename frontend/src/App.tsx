@@ -41,7 +41,10 @@ const client = createClient({
 function App() {
   return (
     <WagmiConfig client={client} >
-      <RainbowKitProvider chains={chains} theme={darkTheme()}>
+      <RainbowKitProvider chains={chains} theme={darkTheme({
+        accentColor: '#000000',
+        accentColorForeground: 'white',
+        })}>
         <div>
             <Editor />
         </div>
