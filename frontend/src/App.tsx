@@ -1,10 +1,20 @@
 import React from 'react';
+import "./index.css";
 import { Editor } from './Editor';
-import { WagmiConfig, createClient, chain, configureChains } from 'wagmi';
+// WAGMI
+import { WagmiConfig, createClient, configureChains } from 'wagmi';
+import { hardhat } from 'wagmi/chains';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
+// RainbowKit
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultWallets,
+  RainbowKitProvider,
+  darkTheme } from '@rainbow-me/rainbowkit';
+
+// Configure the chains and providers for WAGMI
 const { chains, provider } = configureChains(
-  [chain.hardhat],
+  [hardhat],
   [
     jsonRpcProvider({
       rpc: (chain) => ({
@@ -14,17 +24,28 @@ const { chains, provider } = configureChains(
   ]
 );
 
+// Get RainbowKit Connector
+const { connectors } = getDefaultWallets({
+  appName: 'Publius',
+  chains
+});
+
+// Create a WAGMI client, injecting the RainbowKit connector
 const client = createClient({
   autoConnect: true,
+  connectors,
   provider: provider,
 });
+
 
 function App() {
   return (
     <WagmiConfig client={client} >
-      <div>
-          <Editor />
-      </div>
+      <RainbowKitProvider chains={chains} theme={darkTheme()}>
+        <div>
+            <Editor />
+        </div>
+      </RainbowKitProvider>
     </WagmiConfig>
   );
 }

@@ -1,15 +1,4 @@
-body {
-  background: linear-gradient(to bottom left, yellow, #E100FF, blue);
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular",
-    sans-serif;
-  font-weight: 500;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 .App {
-  font-family: sans-serif;
   text-align: center;
 }
 
@@ -45,7 +34,9 @@ h1 {
 }
 
 .editor-container {
-  background:linear-gradient(to bottom left,#E100FF, blue, yellow, );
+  background: white;
+  box-shadow:  5px 5px 10px 5px rgba(0, 0, 0, 0.2);
+  align-items: center;
   margin: 20px auto 20px auto;
   border-radius: 2px;
   max-width: 600px;
