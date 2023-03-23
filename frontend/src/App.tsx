@@ -21,11 +21,11 @@ const client = createClient({
 
 function App() {
   return (
-    <div>
-      <WagmiConfig client={client} >
-        <Editor />
-      </WagmiConfig>
-    </div>
+    <WagmiConfig client={client} >
+      <div>
+          <Editor />
+      </div>
+    </WagmiConfig>
   );
 }
 
