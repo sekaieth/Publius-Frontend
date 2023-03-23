@@ -25,7 +25,7 @@ import type {
 
 export interface PubliusFactoryInterface extends utils.Interface {
   functions: {
-    "createPublication(uint256,address,string,string)": FunctionFragment;
+    "createPublication(uint256,address,string,string,string)": FunctionFragment;
     "getBeacon()": FunctionFragment;
     "getImplementation()": FunctionFragment;
     "getPublicationAddress(uint256)": FunctionFragment;
@@ -43,6 +43,7 @@ export interface PubliusFactoryInterface extends utils.Interface {
     functionFragment: "createPublication",
     values: [
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>
@@ -104,7 +105,8 @@ export interface PubliusFactory extends BaseContract {
   functions: {
     createPublication(
       _id: PromiseOrValue<BigNumberish>,
-      _publicationAuthor: PromiseOrValue<string>,
+      _publicationAuthorAddress: PromiseOrValue<string>,
+      _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -122,7 +124,8 @@ export interface PubliusFactory extends BaseContract {
 
   createPublication(
     _id: PromiseOrValue<BigNumberish>,
-    _publicationAuthor: PromiseOrValue<string>,
+    _publicationAuthorAddress: PromiseOrValue<string>,
+    _publicationAuthorName: PromiseOrValue<string>,
     _publicationName: PromiseOrValue<string>,
     _publicationCoverImage: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -140,7 +143,8 @@ export interface PubliusFactory extends BaseContract {
   callStatic: {
     createPublication(
       _id: PromiseOrValue<BigNumberish>,
-      _publicationAuthor: PromiseOrValue<string>,
+      _publicationAuthorAddress: PromiseOrValue<string>,
+      _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -161,7 +165,8 @@ export interface PubliusFactory extends BaseContract {
   estimateGas: {
     createPublication(
       _id: PromiseOrValue<BigNumberish>,
-      _publicationAuthor: PromiseOrValue<string>,
+      _publicationAuthorAddress: PromiseOrValue<string>,
+      _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -180,7 +185,8 @@ export interface PubliusFactory extends BaseContract {
   populateTransaction: {
     createPublication(
       _id: PromiseOrValue<BigNumberish>,
-      _publicationAuthor: PromiseOrValue<string>,
+      _publicationAuthorAddress: PromiseOrValue<string>,
+      _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
