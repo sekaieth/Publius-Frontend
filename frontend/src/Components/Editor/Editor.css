@@ -144,3 +144,19 @@ pre::-webkit-scrollbar-thumb {
   text-decoration: underline;
 }
 
+button {
+  background: #000000;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  color: #FFF;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 5px 10px;
+  margin: 5px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+  white-space: nowrap;
+}

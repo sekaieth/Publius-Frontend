@@ -1,0 +1,60 @@
+.readerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2%;
+    width: 100%;
+    height: 100%;
+}
+
+.readerBox {
+    display: flex;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow:  5px 5px 10px 5px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2%;
+    padding: 10px;
+    width: 90%;
+    height: 90%;
+}
+
+.readerHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 10%;
+}
+
+.readerBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 80%;
+}
+
+.readerSidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 100%;
+}
+p {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    color: #000;
+    max-width: 90%;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import "./index.css";
 import { Editor } from './Components/Editor/Editor';
+import { Reader } from './Components/Reader/Reader';
 // WAGMI
 import { WagmiConfig, createClient, configureChains } from 'wagmi';
 import { hardhat } from 'wagmi/chains';
@@ -39,6 +40,7 @@ const client = createClient({
 
 
 function App() {
+  const path = window.location.pathname;
   return (
     <WagmiConfig client={client} >
       <RainbowKitProvider chains={chains} theme={darkTheme({
@@ -46,7 +48,8 @@ function App() {
         accentColorForeground: 'white',
         })}>
         <div>
-            <Editor />
+          {path === '/' && <Editor />}
+          {path === '/Reader' && <Reader />}
         </div>
       </RainbowKitProvider>
     </WagmiConfig>

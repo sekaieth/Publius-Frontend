@@ -1,5 +1,5 @@
 import { $getRoot, $getSelection, EditorState } from 'lexical';
-import { useEffect } from 'react';
+import { useEffect, MouseEvent } from 'react';
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
@@ -17,6 +17,9 @@ import { DateTimePlugin } from '../../Plugins/DateTime/DateTimePlugin';
 import { DateTimeNode } from '../../Plugins/DateTime/DateTimeNode';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import PubliusLogo from "../../../../Publius-Transparent-White.png"
+
+// WAGMI Hooks
+import { useAccount } from "wagmi";
 
 const theme = {
   // Theme styling goes here
@@ -43,6 +46,13 @@ function onError(error: Error) {
 }
 
 export function Editor() {
+
+  const { address, isDisconnected } = useAccount();
+
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    console.log(window.location.href = '/Reader');
+  }
   const initialConfig = {
     namespace: 'MyEditor',
     theme,
@@ -54,8 +64,9 @@ export function Editor() {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "3%" }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3%", flexDirection: "column" }}>
         <ConnectButton />
+        { address && !isDisconnected && <a href="/Reader"><button onClick={handleClick}>Read a Publication</button></a> }
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center"}}>
         <img src={PubliusLogo}></img>
