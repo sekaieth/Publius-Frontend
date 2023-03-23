@@ -17,7 +17,8 @@ contract PubliusFactory {
 
     function createPublication(
         uint256 _id, 
-        address _publicationAuthor, 
+        address _publicationAuthorAddress, 
+        string calldata _publicationAuthorName,
         string calldata _publicationName, 
         string calldata _publicationCoverImage
     ) public returns (address) {
@@ -27,7 +28,8 @@ contract PubliusFactory {
             abi.encodeWithSelector(
                 Publius(address(0)).initialize.selector,
                 _id,
-                _publicationAuthor, 
+                _publicationAuthorAddress, 
+                _publicationAuthorName,
                 _publicationName, 
                 _publicationCoverImage
         ));

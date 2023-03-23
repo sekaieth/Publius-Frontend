@@ -31,6 +31,7 @@ contract Publius is
 	/// @notice Publication metadata
 	string public publicationName;
 	address public publicationAuthor;
+    string publicationAuthorName;
 	string public publicationCoverImage;
 	uint256 sectionCount;
 
@@ -59,17 +60,30 @@ contract Publius is
 	}
 
 	/// @notice Initialize the contract
-	/// @param _publicationAuthor The author of the publication
+	/// @param _publicationAuthorAddress The author of the publication
 	/// @param _publicationName The name of the publication
 	/// @param _publicationCoverImage The cover image of the publication
-	function initialize(uint256 _publicationId, address _publicationAuthor, string calldata _publicationName, string calldata _publicationCoverImage) public initializer {
+	function initialize(
+        uint256 _publicationId, 
+        address _publicationAuthorAddress,
+        string calldata _publicationAuthorName, 
+        string calldata _publicationName, 
+        string calldata _publicationCoverImage
+    ) public initializer {
 		__ERC721_init(_publicationName, "PUBLIUS");
 		__Ownable_init();
-		transferOwnership(_publicationAuthor);
+		transferOwnership(_publicationAuthorAddress);
+        require(_publicationId != 0, "Publius: Publication ID cannot be 0");
+        require(_publicationAuthorAddress != address(0), "Publius: Publication author cannot be 0 address");
+        require(keccak256(abi.encode(_publicationName)) != keccak256(abi.encode("")), "Publius: Publication name cannot be empty");
+        require(keccak256(abi.encode(_publicationAuthorName)) != keccak256(abi.encode("")), "Publius: Publication author name cannot be empty");
+        require(keccak256(abi.encode(_publicationCoverImage)) != keccak256(abi.encode("")), "Publius: Publication cover image cannot be empty");
+        require(keccak256(abi.encode(_publicationAuthorName)) != keccak256(abi.encode("")), "Publius: Publication author name cannot be empty");
         publicationId = _publicationId;
 		publicationName = _publicationName;
-		publicationAuthor = _publicationAuthor;
+		publicationAuthor = _publicationAuthorAddress;
 		publicationCoverImage = _publicationCoverImage;
+        publicationAuthorName = _publicationAuthorName;
 	}
 
 	/// @notice Mint new tokens
@@ -360,15 +374,16 @@ contract Publius is
 
         // Add publication details to JSON
         json = string(abi.encodePacked(
-            json,
-            '"publicationName": "',
-            publicationName,
-            '", "authorName": "',
-            addressToString(publicationAuthor),
-            '", "coverImage": "',
-            publicationCoverImage,
-            '", "sections": ['
-        ));
+                    json,
+                    '"name": "',
+                    publicationName,
+                    '", "author": "',
+                    publicationAuthorName,
+                    '", "image": "',
+                    publicationCoverImage,
+                    '", "sections": ['
+                ));
+
 
         // Loop over sections
         for (uint256 i = 1; i <= sectionCount; i++) {
