@@ -18,8 +18,8 @@ export interface Section {
     chapters: Chapter[];
 }
 export interface Publication {
-    publicationName: string;
-    authorName: string;
-    coverImage: string;
+    name: string;
+    author: string;
+    image: string;
     sections: Section[];
 }

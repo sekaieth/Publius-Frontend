@@ -5,18 +5,17 @@ import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 
 
 describe('Test Publius Deployment', () => {
-  let publius: Publius;
-  let author: SignerWithAddress;
-  let publicationName: string;
-  let publicationCoverImage: string;
-  let factory: PubliusFactory;
-
+    let publius: Publius;
+    let deployer: SignerWithAddress;
+    let author: SignerWithAddress;
+    let publicationName: string;
+    let publicationCoverImage: string;
+    let factory: PubliusFactory;
 
   beforeEach(async () => {
       publicationName = 'Test Publication';
       publicationCoverImage = "https://github.com/sekaieth/Publius/blob/main/Publius-Transparent-White.png?raw=true";
-      const signers = await ethers.getSigners();
-      author = signers[1];
+      [deployer, author] = await ethers.getSigners();
 
       // Deploy the implementation contract
       const Publius = await ethers.getContractFactory('Publius');
@@ -25,11 +24,11 @@ describe('Test Publius Deployment', () => {
 
       // Deploy the factory contract, which will also deploy the Beacon contract
       const PubliusFactory = await ethers.getContractFactory('PubliusFactory');
-      factory = await PubliusFactory.deploy(publiusInstance.address);
+      factory = await PubliusFactory.deploy(publiusInstance.address) as PubliusFactory;
       await factory.deployed();
 
       // Deploy the first publication
-      const deployPublication = await factory.createPublication(1, author.address, publicationName, publicationCoverImage);
+      const deployPublication = await factory.createPublication(1, author.address, "sekaieth", publicationName, publicationCoverImage);
       await deployPublication.wait();
 
       publius = await ethers.getContractAt('Publius', await factory.getPublicationAddress(1)) as Publius;
@@ -44,7 +43,7 @@ describe('Test Publius Deployment', () => {
     });
 
     it('reverts if the contract is already initialized', async () => {
-      await expect(publius.initialize(1, author.address, 'My Publication', publicationCoverImage)).to.be.revertedWith(
+      await expect(publius.initialize(1, author.address, "s3kai.eth", publicationName, publicationCoverImage)).to.be.revertedWith(
         'Initializable: contract is already initialized'
       );
     });
@@ -54,7 +53,7 @@ describe('Test Publius Deployment', () => {
     });
 
     it("factory contract deploys new proxies", async () => {
-      factory.createPublication(2, author.address, "Publication 2", "TEST IMAGE2");
+      factory.createPublication(2, author.address, "s3kai.eth", "Publication 2", "TEST IMAGE2");
       expect(await factory.getPublicationAddress(2)).to.not.equal(await factory.getPublicationAddress(1));
 
       const publius2 = await ethers.getContractAt('Publius', await factory.getPublicationAddress(2)) as Publius;
