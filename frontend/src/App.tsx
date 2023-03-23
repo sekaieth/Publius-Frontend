@@ -1,6 +1,6 @@
 import React from 'react';
 import "./index.css";
-import { Editor } from './Editor';
+import { Editor } from './Components/Editor/Editor';
 // WAGMI
 import { WagmiConfig, createClient, configureChains } from 'wagmi';
 import { hardhat } from 'wagmi/chains';
