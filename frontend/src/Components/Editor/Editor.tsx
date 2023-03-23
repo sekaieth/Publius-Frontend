@@ -10,13 +10,13 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import './Editor.css';
-import TreeViewPlugin from './TreeviewPlugin';
+import TreeViewPlugin from '../../TreeviewPlugin';
 import React from 'react';
-import AutoFocusPlugin from './AutoFocusPlugin';
-import { DateTimePlugin } from './DateTimePlugin';
-import { DateTimeNode } from './DateTimeNode';
+import AutoFocusPlugin from '../AutoFocus/AutoFocusPlugin';
+import { DateTimePlugin } from '../DateTime/DateTimePlugin';
+import { DateTimeNode } from '../DateTime/DateTimeNode';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import PubliusLogo from "../../Publius-Transparent-White.png"
+import PubliusLogo from "../../../../Publius-Transparent-White.png"
 
 const theme = {
   // Theme styling goes here
