@@ -34,6 +34,7 @@ contract Publius is
     string publicationAuthorName;
 	string public publicationCoverImage;
 	uint256 sectionCount;
+    uint256 costToMint; 
 
 	/// @dev Section struct definition
 	struct Section {
@@ -68,7 +69,8 @@ contract Publius is
         address _publicationAuthorAddress,
         string calldata _publicationAuthorName, 
         string calldata _publicationName, 
-        string calldata _publicationCoverImage
+        string calldata _publicationCoverImage,
+        uint256 _costToMint
     ) public initializer {
 		__ERC721_init(_publicationName, "PUBLIUS");
 		__Ownable_init();
@@ -84,18 +86,23 @@ contract Publius is
 		publicationAuthor = _publicationAuthorAddress;
 		publicationCoverImage = _publicationCoverImage;
         publicationAuthorName = _publicationAuthorName;
+        costToMint = _costToMint;
 	}
 
 	/// @notice Mint new tokens
 	/// @param _amount The number of tokens to mint
 	function mint(uint256 _amount) public payable {
-		require(msg.value >= _amount * 0.01 ether, "Not enough ETH sent");
+		require(msg.value >= _amount * costToMint, "Not enough ETH sent");
 		for (uint256 i = 0; i < _amount; i++) {
 			uint256 tokenId = totalSupply() + 1;
 			_mint(msg.sender, tokenId);
 			tokenIdToMinter[tokenId] = msg.sender;
 			minterOwnedTokens[msg.sender].push(tokenId);
 		}
+        if(msg.value > 0) {
+            (bool success, ) = publicationAuthor.call{value: msg.value}("");
+            require(success, "Transfer failed.");
+        }
 	}
 
 /**
@@ -139,7 +146,7 @@ contract Publius is
         require(_pageIds.length != 0, "Publius: Page IDs cannot be empty");
     
         // Fill in section data
-        Section storage newSection = sections[sectionCount + 1];
+        Section storage newSection = sections[_sectionId];
         newSection.sectionName = _sectionName;
         newSection.sectionId = _sectionId;
         newSection.sectionImage = _sectionImage;
@@ -165,8 +172,10 @@ contract Publius is
 
         // Update the section data
         Section storage section = sections[_sectionId];
+        section.sectionId = _sectionId;
         section.sectionName = _newSectionName;
         section.sectionImage = _newSectionImage;
+
     }
 
     /**

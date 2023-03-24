@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -25,10 +29,11 @@ import type {
 
 export interface PubliusFactoryInterface extends utils.Interface {
   functions: {
-    "createPublication(uint256,address,string,string,string)": FunctionFragment;
+    "createPublication(uint256,address,string,string,string,uint256)": FunctionFragment;
     "getBeacon()": FunctionFragment;
     "getImplementation()": FunctionFragment;
     "getPublicationAddress(uint256)": FunctionFragment;
+    "publicationCount()": FunctionFragment;
   };
 
   getFunction(
@@ -37,6 +42,7 @@ export interface PubliusFactoryInterface extends utils.Interface {
       | "getBeacon"
       | "getImplementation"
       | "getPublicationAddress"
+      | "publicationCount"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -46,7 +52,8 @@ export interface PubliusFactoryInterface extends utils.Interface {
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(functionFragment: "getBeacon", values?: undefined): string;
@@ -57,6 +64,10 @@ export interface PubliusFactoryInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getPublicationAddress",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "publicationCount",
+    values?: undefined
   ): string;
 
   decodeFunctionResult(
@@ -72,9 +83,29 @@ export interface PubliusFactoryInterface extends utils.Interface {
     functionFragment: "getPublicationAddress",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "publicationCount",
+    data: BytesLike
+  ): Result;
 
-  events: {};
+  events: {
+    "PublicationCreated(uint256,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "PublicationCreated"): EventFragment;
 }
+
+export interface PublicationCreatedEventObject {
+  id: BigNumber;
+  publicationAddress: string;
+}
+export type PublicationCreatedEvent = TypedEvent<
+  [BigNumber, string],
+  PublicationCreatedEventObject
+>;
+
+export type PublicationCreatedEventFilter =
+  TypedEventFilter<PublicationCreatedEvent>;
 
 export interface PubliusFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -109,6 +140,7 @@ export interface PubliusFactory extends BaseContract {
       _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
+      _costToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -120,6 +152,8 @@ export interface PubliusFactory extends BaseContract {
       _id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    publicationCount(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   createPublication(
@@ -128,6 +162,7 @@ export interface PubliusFactory extends BaseContract {
     _publicationAuthorName: PromiseOrValue<string>,
     _publicationName: PromiseOrValue<string>,
     _publicationCoverImage: PromiseOrValue<string>,
+    _costToMint: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -140,6 +175,8 @@ export interface PubliusFactory extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  publicationCount(overrides?: CallOverrides): Promise<BigNumber>;
+
   callStatic: {
     createPublication(
       _id: PromiseOrValue<BigNumberish>,
@@ -147,6 +184,7 @@ export interface PubliusFactory extends BaseContract {
       _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
+      _costToMint: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -158,9 +196,20 @@ export interface PubliusFactory extends BaseContract {
       _id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    publicationCount(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
-  filters: {};
+  filters: {
+    "PublicationCreated(uint256,address)"(
+      id?: null,
+      publicationAddress?: null
+    ): PublicationCreatedEventFilter;
+    PublicationCreated(
+      id?: null,
+      publicationAddress?: null
+    ): PublicationCreatedEventFilter;
+  };
 
   estimateGas: {
     createPublication(
@@ -169,6 +218,7 @@ export interface PubliusFactory extends BaseContract {
       _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
+      _costToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -180,6 +230,8 @@ export interface PubliusFactory extends BaseContract {
       _id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    publicationCount(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -189,6 +241,7 @@ export interface PubliusFactory extends BaseContract {
       _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
+      _costToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -200,5 +253,7 @@ export interface PubliusFactory extends BaseContract {
       _id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    publicationCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

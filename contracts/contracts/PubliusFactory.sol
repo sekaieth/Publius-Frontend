@@ -8,8 +8,13 @@ import "./Publius.sol";
 contract PubliusFactory {
 
     mapping(uint256 => address) private publications;
-
+    uint256 public publicationCount;
     PubliusBeacon immutable beacon;
+
+    event PublicationCreated (
+        uint256 id,
+        address publicationAddress
+    );
     
     constructor(address _publiusImpl) {
         beacon = new PubliusBeacon(_publiusImpl);
@@ -20,7 +25,8 @@ contract PubliusFactory {
         address _publicationAuthorAddress, 
         string calldata _publicationAuthorName,
         string calldata _publicationName, 
-        string calldata _publicationCoverImage
+        string calldata _publicationCoverImage,
+        uint256 _costToMint
     ) public returns (address) {
         require(publications[_id] == address(0), "PubliusFactory: Publication already exists");
         BeaconProxy publication = new BeaconProxy(
@@ -31,9 +37,12 @@ contract PubliusFactory {
                 _publicationAuthorAddress, 
                 _publicationAuthorName,
                 _publicationName, 
-                _publicationCoverImage
+                _publicationCoverImage,
+                _costToMint
         ));
         publications[_id] = address(publication);
+        publicationCount++;
+        emit PublicationCreated(_id, address(publication));
         return address(publication);
     }
 
