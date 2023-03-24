@@ -26,7 +26,7 @@ async function addPublication() {
         author 
     ) as PubliusFactory;
     const deployPublication = await factory.createPublication(
-        2, 
+        1, 
         author.address, 
         "sekaieth", 
         publicationName, 
@@ -34,6 +34,8 @@ async function addPublication() {
         ethers.utils.parseEther("0.1")
     );
     deployPublication.wait();
+
+    const publicationAddress = await factory.getPublicationAddress(1);
 
     const contracts: Record<ContractName, Contract> = ({
         PubliusImpl: {
@@ -46,7 +48,7 @@ async function addPublication() {
         },
         Publius: {
             network: network.name === 'unknown' ? 'hardhat' : network.name,
-            address: await factory.getPublicationAddress(1),
+            address: publicationAddress,
         }
     });
 
@@ -61,6 +63,7 @@ async function addPublication() {
     console.error(err);
     } 
     console.info(`Contract info updated in ${network.name === 'unknown' ? 'hardhat' : network.name}-contract-info.json`);
+    console.info("Publication Contract Address: ", await factory.getPublicationAddress(1));
 }
 
 addPublication();
