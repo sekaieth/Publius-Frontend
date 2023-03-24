@@ -8,8 +8,13 @@ import "./Publius.sol";
 contract PubliusFactory {
 
     mapping(uint256 => address) private publications;
-
+    uint256 public publicationCount;
     PubliusBeacon immutable beacon;
+
+    event PublicationCreated (
+        uint256 id,
+        address publicationAddress
+    );
     
     constructor(address _publiusImpl) {
         beacon = new PubliusBeacon(_publiusImpl);
@@ -36,6 +41,8 @@ contract PubliusFactory {
                 _costToMint
         ));
         publications[_id] = address(publication);
+        publicationCount++;
+        emit PublicationCreated(_id, address(publication));
         return address(publication);
     }
 

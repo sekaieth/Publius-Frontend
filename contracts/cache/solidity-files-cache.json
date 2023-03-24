@@ -38,8 +38,8 @@
       ]
     },
     "/Users/logan.delafosse/github/Publius/contracts/contracts/Publius.sol": {
-      "lastModificationDate": 1679671352684,
-      "contentHash": "008df80c1be3a547445768c0337753d5",
+      "lastModificationDate": 1679684056869,
+      "contentHash": "ffae62138935968ebdb4bc118a59ef27",
       "sourceName": "contracts/Publius.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -948,8 +948,8 @@
       ]
     },
     "/Users/logan.delafosse/github/Publius/contracts/contracts/PubliusFactory.sol": {
-      "lastModificationDate": 1679671373827,
-      "contentHash": "c2d7d8475bea61c06f59ae5f537dfd87",
+      "lastModificationDate": 1679680080573,
+      "contentHash": "0ce963828230644d3beb1087b0e3f49e",
       "sourceName": "contracts/PubliusFactory.sol",
       "solcConfig": {
         "version": "0.8.18",
