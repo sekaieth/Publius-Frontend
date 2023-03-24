@@ -1,9 +1,11 @@
 import { ethers } from "hardhat";
 import { Publication } from '../interfaces';
+import hardhatAddresses from "../hardhat-contract-info.json";
+import scrollAddresses from "../scroll-contract-info.json";
 
 async function addSection() {
     const content =  "# Lorem Ipsum **Lorem ipsum dolor sit amet**, _consectetur adipiscing elit_. ## Integer et Molestie Proin `sed ullamcorper` orci: ```javascript let aenean = 'hendrerit'; const curabitur = 'mauris'; ``` ## Imperdiet et Consectetur Phasellus `vestibulum`: ```javascript function loremIpsum(nunc) { return `Vivamus eu: ${nunc}`; } ``` Nulla facilisi, sed `do eiusmod tempor incididunt` ut labore et dolore magna aliqua.";
-
+    const network = await ethers.provider.getNetwork();
     const publication: Publication = {
       name: "Test Publication",
       author: "sekaieth",
@@ -134,7 +136,11 @@ async function addSection() {
           ));
 
     const [author] = await ethers.getSigners();
-    const publius = await ethers.getContractAt('Publius', '0x9f1ac54BEF0DD2f6f3462EA0fa94fC62300d3a8e', author);
+    const publius = await ethers.getContractAt(
+      'Publius', 
+      hardhatAddresses.Publius.address, 
+      author
+    );
     const addSection = await publius.addSection(
         encodedSections,
         encodedChapters,
