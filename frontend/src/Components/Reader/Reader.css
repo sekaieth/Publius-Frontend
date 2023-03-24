@@ -29,6 +29,57 @@
     justify-content: center;
     width: 100%;
     height: 10%;
+    margin: auto;
+    padding: auto;
+}
+
+.readerBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 100%;
+}
+
+.readerContent {
+    display: flex;
+    width: 100%;
+    height: 80%;
+}
+.readerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2%;
+    width: 100%;
+    height: 100%;
+}
+
+.readerBox {
+    display: flex;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow:  5px 5px 10px 5px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2%;
+    padding: 10px;
+    width: 90%;
+    height: 90%;
+}
+
+.readerHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 10%;
+    margin: auto;
+    padding: auto;
 }
 
 .readerBody {
@@ -45,8 +96,55 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 20%;
+    text-align: center;
+    width: 30%;
     height: 100%;
+}
+.collapsible {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.content {
+  display: none;
+  overflow: hidden;
+  padding-left: 20px;
+}
+.section {
+  margin-bottom: 10px;
+}
+.chapter {
+  margin-left: 1px;
+  margin-bottom: 8px;
+}
+.page {
+  margin-left: 1px;
+}
+.pageContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 70%;
+    margin-top: 10%;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+h2 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    color: #000;
+    max-width: 90%;
+    font-weight: 800;
 }
 p {
     font-size: 20px;
@@ -57,4 +155,52 @@ p {
     text-align: left;
     color: #000;
     max-width: 90%;
+}
+li {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    align-items: left;
+    color: #000;
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    color: #000;
+}
+h2 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    color: #000;
+    max-width: 90%;
+    font-weight: 800;
+}
+p {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    color: #000;
+    max-width: 90%;
+}
+li {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    align-items: left;
+    color: #000;
 }
