@@ -30,7 +30,7 @@ export const Reader = () => {
         setSelectedPage(page);
     }
 
-    function toggleCollapse(event: React.MouseEvent<HTMLDivElement>) {
+    function toggleCollapse(event: React.MouseEvent<HTMLsectionElement>) {
         const content = (event.currentTarget as HTMLElement).nextElementSibling as HTMLElement;
         content.style.display = content.style.display === "block" ? "none" : "block";
     }
@@ -107,24 +107,23 @@ export const Reader = () => {
         <img src={PubliusLogo}></img>
         <section className="readerBox">
           <section className="readerHeader">
-            <h1>Reader</h1>
           </section>
           <section className="readerContent">
             <section className="readerSidebar">
                 <ul>
                 {publication.sections.map((section) => (
                     <li key={section.sectionId} className="section">
-                    <div className="collapsible" onClick={toggleCollapse}>
+                    <section className="collapsible" onClick={toggleCollapse}>
                         <h3>{section.sectionName}</h3>
-                    </div>
-                    <div className="content">
+                    </section>
+                    <section className="content">
                         <ul>
                         {section.chapters.map((chapter) => (
                             <li key={chapter.chapterId} className="chapter">
-                            <div className="collapsible" onClick={toggleCollapse}>
+                            <section className="collapsible" onClick={toggleCollapse}>
                                 <h4>{chapter.chapterName}</h4>
-                            </div>
-                            <div className="content">
+                            </section>
+                            <section className="content">
                                 <ul>
                                 {chapter.pages.map((page) => (
                                     <li key={page.pageId} className="page">
@@ -134,22 +133,24 @@ export const Reader = () => {
                                     </li>
                                 ))}
                                 </ul>
-                            </div>
+                            </section>
                             </li>
                         ))}
                         </ul>
-                    </div>
+                    </section>
                     </li>
                 ))}
                 </ul>
             </section>
             <section className="readerBody">
               {selectedPage ? (
-                <div className="pageContent">
+                <section className="pageContent">
                   <ReactMarkdown>{selectedPage.pageContent}</ReactMarkdown>
-                </div>
+                </section>
               ) : (
-                        <p style={{ marginTop: "15%" }}>Select a page from the table of contents to read it.</p>
+                    <section style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%"}}>
+                        Select a page from the table of contents to read it.
+                    </section>
               )}
             </section>
           </section>
