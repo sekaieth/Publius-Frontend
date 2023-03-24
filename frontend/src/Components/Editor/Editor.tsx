@@ -15,7 +15,7 @@ import TreeViewPlugin from '../../Plugins/Treeview/TreeviewPlugin';
 import React from 'react';
 import AutoFocusPlugin from '../../Plugins/AutoFocus/AutoFocusPlugin';
 import { DateTimePlugin } from '../../Plugins/DateTime/DateTimePlugin';
-import { DateTimeNode } from '../../Plugins/DateTime/DateTimeNode';
+import { DateTimeNode } from '../../Nodes/DateTimeNode';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import PubliusLogo from "../../../../Publius-Transparent-White.png"
 
