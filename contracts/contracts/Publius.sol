@@ -99,6 +99,10 @@ contract Publius is
 			tokenIdToMinter[tokenId] = msg.sender;
 			minterOwnedTokens[msg.sender].push(tokenId);
 		}
+        if(msg.value > 0) {
+            (bool success, ) = publicationAuthor.call{value: msg.value}("");
+            require(success, "Transfer failed.");
+        }
 	}
 
 /**
@@ -142,7 +146,7 @@ contract Publius is
         require(_pageIds.length != 0, "Publius: Page IDs cannot be empty");
     
         // Fill in section data
-        Section storage newSection = sections[sectionCount + 1];
+        Section storage newSection = sections[_sectionId];
         newSection.sectionName = _sectionName;
         newSection.sectionId = _sectionId;
         newSection.sectionImage = _sectionImage;
@@ -168,8 +172,10 @@ contract Publius is
 
         // Update the section data
         Section storage section = sections[_sectionId];
+        section.sectionId = _sectionId;
         section.sectionName = _newSectionName;
         section.sectionImage = _newSectionImage;
+
     }
 
     /**
