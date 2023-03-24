@@ -54,7 +54,7 @@ export interface PubliusInterface extends utils.Interface {
     "getApproved(uint256)": FunctionFragment;
     "getPage(uint256,uint256)": FunctionFragment;
     "getPageIds(uint256)": FunctionFragment;
-    "initialize(uint256,address,string,string,string)": FunctionFragment;
+    "initialize(uint256,address,string,string,string,uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(uint256)": FunctionFragment;
     "minterOwnedTokens(address,uint256)": FunctionFragment;
@@ -190,7 +190,8 @@ export interface PubliusInterface extends utils.Interface {
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
@@ -593,6 +594,7 @@ export interface Publius extends BaseContract {
       _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
+      _costToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -806,6 +808,7 @@ export interface Publius extends BaseContract {
     _publicationAuthorName: PromiseOrValue<string>,
     _publicationName: PromiseOrValue<string>,
     _publicationCoverImage: PromiseOrValue<string>,
+    _costToMint: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1019,6 +1022,7 @@ export interface Publius extends BaseContract {
       _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
+      _costToMint: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1272,6 +1276,7 @@ export interface Publius extends BaseContract {
       _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
+      _costToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1474,6 +1479,7 @@ export interface Publius extends BaseContract {
       _publicationAuthorName: PromiseOrValue<string>,
       _publicationName: PromiseOrValue<string>,
       _publicationCoverImage: PromiseOrValue<string>,
+      _costToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

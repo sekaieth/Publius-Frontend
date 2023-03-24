@@ -20,7 +20,8 @@ contract PubliusFactory {
         address _publicationAuthorAddress, 
         string calldata _publicationAuthorName,
         string calldata _publicationName, 
-        string calldata _publicationCoverImage
+        string calldata _publicationCoverImage,
+        uint256 _costToMint
     ) public returns (address) {
         require(publications[_id] == address(0), "PubliusFactory: Publication already exists");
         BeaconProxy publication = new BeaconProxy(
@@ -31,7 +32,8 @@ contract PubliusFactory {
                 _publicationAuthorAddress, 
                 _publicationAuthorName,
                 _publicationName, 
-                _publicationCoverImage
+                _publicationCoverImage,
+                _costToMint
         ));
         publications[_id] = address(publication);
         return address(publication);
