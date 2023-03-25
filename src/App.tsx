@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import "./index.css";
 import { Editor } from './Components/Editor/Editor';
 import { Reader } from './Components/Reader/Reader';
@@ -48,7 +48,17 @@ const client = createClient({
 
 
 function App() {
-  const path = window.location.pathname;
+ const [path, setPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handlePathChange = () => {
+      setPath(window.location.pathname);
+    };
+    window.addEventListener('popstate', handlePathChange);
+    return () => {
+      window.removeEventListener('popstate', handlePathChange);
+    };
+  }, []);
   return (
     <WagmiConfig client={client} >
       <RainbowKitProvider chains={chains} theme={darkTheme({
