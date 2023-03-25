@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./Reader.css";
 import { ethers } from "ethers";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useContractRead, useAccount } from "wagmi";
+import { useContractRead, useAccount, useNetwork } from "wagmi";
 import { usePubliusTokenUri } from "../../generated"
 import PubliusLogo from "../../../../Publius-Transparent-White.png";
 import { Publius__factory } from "../../../../contracts/typechain-types";
-import hardhatAddresses from "../../../../contracts/hardhat-contract-info.json"
+import hardhatAddresses from "../../../../contracts/hardhat-contract-info.json";
+import scrollAddresses from "../../../../contracts/scroll-contract-info.json";
 import { 
     Publication, 
     Section,
@@ -20,9 +21,13 @@ export const Reader = () => {
     const [publication, setPublication] = useState<Publication>();
 
     const { address, isDisconnected } = useAccount();
+    const { chain, chains } = useNetwork();
 
-    const { data } = usePubliusTokenUri ({
-        address: `0x${hardhatAddresses.Publius.address.substring(2)}`,
+    const hardhatPublius = hardhatAddresses.Publius.address.substring(2);
+    const scrollPublius = scrollAddresses.Publius.address.substring(2);
+
+    const { data, isError, error } = usePubliusTokenUri ({
+        address: `0x${scrollPublius}`,
         args: [ethers.BigNumber.from(1)],
     });
 
@@ -30,19 +35,16 @@ export const Reader = () => {
         setSelectedPage(page);
     }
 
-    function toggleCollapse(event: React.MouseEvent<HTMLsectionElement>) {
+    function toggleCollapse(event: React.MouseEvent) {
         const content = (event.currentTarget as HTMLElement).nextElementSibling as HTMLElement;
         content.style.display = content.style.display === "block" ? "none" : "block";
     }
 
     useEffect(() => {
-        console.log(data);
         if (data) {
-            console.log(data);
             const encodedPublication = data.substring(29);
             const decodedB64 = atob(encodedPublication);
             const json = JSON.parse(decodedB64);
-            console.log(json);
             setPublication(json);
         }
     }, [data]);
@@ -57,7 +59,20 @@ export const Reader = () => {
                 </section>
             </section>
         )
-    } else return (
+    } 
+    if(isError) {
+        return (
+              <section className="readerContainer">
+                <ConnectButton />
+                <img src={PubliusLogo}></img>
+                <section className="readerBoxBig">
+                    <h1>There was an error loading the publication</h1>
+                    {error && error.message}         
+                </section>
+            </section>
+        )
+    }
+    else return (
       <section className="readerContainer">
         <ConnectButton />
         <img src={PubliusLogo}></img>
