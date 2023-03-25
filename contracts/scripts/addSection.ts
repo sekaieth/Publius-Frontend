@@ -6,8 +6,6 @@ import devdocs from "../devdocs.json";
 import { PubliusFactory, Publius } from "../typechain-types";
 
 async function addSection() {
-    const content =  "# Lorem Ipsum **Lorem ipsum dolor sit amet**, _consectetur adipiscing elit_. ## Integer et Molestie Proin `sed ullamcorper` orci: ```javascript let aenean = 'hendrerit'; const curabitur = 'mauris'; ``` ## Imperdiet et Consectetur Phasellus `vestibulum`: ```javascript function loremIpsum(nunc) { return `Vivamus eu: ${nunc}`; } ``` Nulla facilisi, sed `do eiusmod tempor incididunt` ut labore et dolore magna aliqua.";
-    const network = await ethers.provider.getNetwork();
     let encodedSection: string;
     let encodedChapters: string;
     let encodedPages: string;

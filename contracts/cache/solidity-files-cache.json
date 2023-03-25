@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/logan.delafosse/github/Publius/contracts/contracts/IPublius.sol": {
-      "lastModificationDate": 1679239962734,
-      "contentHash": "c412b480015ed9eb942ae1e71d78705e",
+      "lastModificationDate": 1679755004475,
+      "contentHash": "4a3ac854f8068b10a8e898fc55d5ae13",
       "sourceName": "contracts/IPublius.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -34,12 +34,13 @@
         "^0.8.18"
       ],
       "artifacts": [
-        "IPublius"
+        "IPublius",
+        "IPubliusFactory"
       ]
     },
     "/Users/logan.delafosse/github/Publius/contracts/contracts/Publius.sol": {
-      "lastModificationDate": 1679684056869,
-      "contentHash": "ffae62138935968ebdb4bc118a59ef27",
+      "lastModificationDate": 1679756210597,
+      "contentHash": "a883903a19dc855b7bb6ff247455710f",
       "sourceName": "contracts/Publius.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -948,8 +949,8 @@
       ]
     },
     "/Users/logan.delafosse/github/Publius/contracts/contracts/PubliusFactory.sol": {
-      "lastModificationDate": 1679680080573,
-      "contentHash": "0ce963828230644d3beb1087b0e3f49e",
+      "lastModificationDate": 1679756538607,
+      "contentHash": "52eee9294783dce9d6897fff07321786",
       "sourceName": "contracts/PubliusFactory.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -981,15 +982,15 @@
         "./Publius.sol"
       ],
       "versionPragmas": [
-        "^0.8.0"
+        "^0.8.18"
       ],
       "artifacts": [
         "PubliusFactory"
       ]
     },
     "/Users/logan.delafosse/github/Publius/contracts/contracts/PubliusBeacon.sol": {
-      "lastModificationDate": 1679433118187,
-      "contentHash": "5124709d160dc7c0b1c292c5d66e50d5",
+      "lastModificationDate": 1679754997984,
+      "contentHash": "0a1ab363d0f71bf0712b1cae12da3769",
       "sourceName": "contracts/PubliusBeacon.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -1020,7 +1021,7 @@
         "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [
-        "^0.8.0"
+        "^0.8.18"
       ],
       "artifacts": [
         "PubliusBeacon"

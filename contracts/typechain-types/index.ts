@@ -58,8 +58,10 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
-export type { IPublius } from "./contracts/IPublius";
-export { IPublius__factory } from "./factories/contracts/IPublius__factory";
+export type { IPublius } from "./contracts/IPublius.sol/IPublius";
+export { IPublius__factory } from "./factories/contracts/IPublius.sol/IPublius__factory";
+export type { IPubliusFactory } from "./contracts/IPublius.sol/IPubliusFactory";
+export { IPubliusFactory__factory } from "./factories/contracts/IPublius.sol/IPubliusFactory__factory";
 export type { Publius } from "./contracts/Publius";
 export { Publius__factory } from "./factories/contracts/Publius__factory";
 export type { PubliusBeacon } from "./contracts/PubliusBeacon";

@@ -1,0 +1,55 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IPubliusFactory",
+  "sourceName": "contracts/IPublius.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_publicationAuthorAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_publicationAuthorName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_publicationName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_publicationCoverImage",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_costToMint",
+          "type": "uint256"
+        }
+      ],
+      "name": "createPublication",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

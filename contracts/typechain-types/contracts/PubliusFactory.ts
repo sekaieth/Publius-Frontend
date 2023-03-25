@@ -89,11 +89,23 @@ export interface PubliusFactoryInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "BeaconDeployed(address)": EventFragment;
     "PublicationCreated(uint256,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "BeaconDeployed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PublicationCreated"): EventFragment;
 }
+
+export interface BeaconDeployedEventObject {
+  beaconAddress: string;
+}
+export type BeaconDeployedEvent = TypedEvent<
+  [string],
+  BeaconDeployedEventObject
+>;
+
+export type BeaconDeployedEventFilter = TypedEventFilter<BeaconDeployedEvent>;
 
 export interface PublicationCreatedEventObject {
   id: BigNumber;
@@ -201,6 +213,9 @@ export interface PubliusFactory extends BaseContract {
   };
 
   filters: {
+    "BeaconDeployed(address)"(beaconAddress?: null): BeaconDeployedEventFilter;
+    BeaconDeployed(beaconAddress?: null): BeaconDeployedEventFilter;
+
     "PublicationCreated(uint256,address)"(
       id?: null,
       publicationAddress?: null

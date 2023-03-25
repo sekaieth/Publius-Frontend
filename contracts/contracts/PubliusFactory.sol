@@ -17,6 +17,10 @@ contract PubliusFactory {
     // Beacon contract for Publius
     PubliusBeacon immutable beacon;
 
+    // Event emitted when a the Beacon is deployed in the constructor
+    event BeaconDeployed (
+        address beaconAddress
+    );
     // Event emitted when a new publication is created
     event PublicationCreated (
         uint256 id,
@@ -29,6 +33,7 @@ contract PubliusFactory {
      */
     constructor(address _publiusImpl) {
         beacon = new PubliusBeacon(_publiusImpl);
+        emit BeaconDeployed(address(beacon));
     }
 
     /**

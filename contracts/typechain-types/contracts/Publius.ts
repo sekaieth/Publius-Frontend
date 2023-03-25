@@ -82,6 +82,7 @@ export interface PubliusInterface extends utils.Interface {
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "withdraw(uint256)": FunctionFragment;
   };
 
   getFunction(
@@ -124,6 +125,7 @@ export interface PubliusInterface extends utils.Interface {
       | "totalSupply"
       | "transferFrom"
       | "transferOwnership"
+      | "withdraw"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -319,6 +321,10 @@ export interface PubliusInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "withdraw",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
 
   decodeFunctionResult(functionFragment: "addChapter", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "addPage", data: BytesLike): Result;
@@ -421,19 +427,32 @@ export interface PubliusInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "ChapterAdded(uint256,string,string,uint256[])": EventFragment;
+    "ChapterModified(uint256,string,string)": EventFragment;
     "Initialized(uint8)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "PageAdded(uint256,string,string)": EventFragment;
+    "PageModified(uint256,string,string)": EventFragment;
+    "SectionAdded(uint256,string,string,uint256[])": EventFragment;
+    "SectionModified(uint256,string,string)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ChapterAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ChapterModified"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PageAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PageModified"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SectionAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SectionModified"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -461,6 +480,31 @@ export type ApprovalForAllEvent = TypedEvent<
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
+export interface ChapterAddedEventObject {
+  chapterId: BigNumber;
+  chapterName: string;
+  chapterImage: string;
+  pageIds: BigNumber[];
+}
+export type ChapterAddedEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber[]],
+  ChapterAddedEventObject
+>;
+
+export type ChapterAddedEventFilter = TypedEventFilter<ChapterAddedEvent>;
+
+export interface ChapterModifiedEventObject {
+  chapterId: BigNumber;
+  chapterName: string;
+  chapterImage: string;
+}
+export type ChapterModifiedEvent = TypedEvent<
+  [BigNumber, string, string],
+  ChapterModifiedEventObject
+>;
+
+export type ChapterModifiedEventFilter = TypedEventFilter<ChapterModifiedEvent>;
+
 export interface InitializedEventObject {
   version: number;
 }
@@ -479,6 +523,55 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface PageAddedEventObject {
+  pageId: BigNumber;
+  pageName: string;
+  pageContent: string;
+}
+export type PageAddedEvent = TypedEvent<
+  [BigNumber, string, string],
+  PageAddedEventObject
+>;
+
+export type PageAddedEventFilter = TypedEventFilter<PageAddedEvent>;
+
+export interface PageModifiedEventObject {
+  pageId: BigNumber;
+  pageName: string;
+  pageContent: string;
+}
+export type PageModifiedEvent = TypedEvent<
+  [BigNumber, string, string],
+  PageModifiedEventObject
+>;
+
+export type PageModifiedEventFilter = TypedEventFilter<PageModifiedEvent>;
+
+export interface SectionAddedEventObject {
+  sectionId: BigNumber;
+  sectionName: string;
+  sectionImage: string;
+  chapterIds: BigNumber[];
+}
+export type SectionAddedEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber[]],
+  SectionAddedEventObject
+>;
+
+export type SectionAddedEventFilter = TypedEventFilter<SectionAddedEvent>;
+
+export interface SectionModifiedEventObject {
+  sectionId: BigNumber;
+  sectionName: string;
+  sectionImage: string;
+}
+export type SectionModifiedEvent = TypedEvent<
+  [BigNumber, string, string],
+  SectionModifiedEventObject
+>;
+
+export type SectionModifiedEventFilter = TypedEventFilter<SectionModifiedEvent>;
 
 export interface TransferEventObject {
   from: string;
@@ -731,6 +824,11 @@ export interface Publius extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    withdraw(
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   addChapter(
@@ -946,6 +1044,11 @@ export interface Publius extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  withdraw(
+    _amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     addChapter(
       _sectionId: PromiseOrValue<BigNumberish>,
@@ -1157,6 +1260,11 @@ export interface Publius extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    withdraw(
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -1182,6 +1290,30 @@ export interface Publius extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
+    "ChapterAdded(uint256,string,string,uint256[])"(
+      chapterId?: null,
+      chapterName?: null,
+      chapterImage?: null,
+      pageIds?: null
+    ): ChapterAddedEventFilter;
+    ChapterAdded(
+      chapterId?: null,
+      chapterName?: null,
+      chapterImage?: null,
+      pageIds?: null
+    ): ChapterAddedEventFilter;
+
+    "ChapterModified(uint256,string,string)"(
+      chapterId?: null,
+      chapterName?: null,
+      chapterImage?: null
+    ): ChapterModifiedEventFilter;
+    ChapterModified(
+      chapterId?: null,
+      chapterName?: null,
+      chapterImage?: null
+    ): ChapterModifiedEventFilter;
+
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
 
@@ -1193,6 +1325,52 @@ export interface Publius extends BaseContract {
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
+
+    "PageAdded(uint256,string,string)"(
+      pageId?: null,
+      pageName?: null,
+      pageContent?: null
+    ): PageAddedEventFilter;
+    PageAdded(
+      pageId?: null,
+      pageName?: null,
+      pageContent?: null
+    ): PageAddedEventFilter;
+
+    "PageModified(uint256,string,string)"(
+      pageId?: null,
+      pageName?: null,
+      pageContent?: null
+    ): PageModifiedEventFilter;
+    PageModified(
+      pageId?: null,
+      pageName?: null,
+      pageContent?: null
+    ): PageModifiedEventFilter;
+
+    "SectionAdded(uint256,string,string,uint256[])"(
+      sectionId?: null,
+      sectionName?: null,
+      sectionImage?: null,
+      chapterIds?: null
+    ): SectionAddedEventFilter;
+    SectionAdded(
+      sectionId?: null,
+      sectionName?: null,
+      sectionImage?: null,
+      chapterIds?: null
+    ): SectionAddedEventFilter;
+
+    "SectionModified(uint256,string,string)"(
+      sectionId?: null,
+      sectionName?: null,
+      sectionImage?: null
+    ): SectionModifiedEventFilter;
+    SectionModified(
+      sectionId?: null,
+      sectionName?: null,
+      sectionImage?: null
+    ): SectionModifiedEventFilter;
 
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
@@ -1407,6 +1585,11 @@ export interface Publius extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    withdraw(
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1610,6 +1793,11 @@ export interface Publius extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
+      _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

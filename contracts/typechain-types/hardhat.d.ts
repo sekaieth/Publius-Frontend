@@ -121,6 +121,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IPublius__factory>;
     getContractFactory(
+      name: "IPubliusFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPubliusFactory__factory>;
+    getContractFactory(
       name: "Publius",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Publius__factory>;
@@ -268,6 +272,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IPublius>;
+    getContractAt(
+      name: "IPubliusFactory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPubliusFactory>;
     getContractAt(
       name: "Publius",
       address: string,
