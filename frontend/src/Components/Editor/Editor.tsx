@@ -15,7 +15,7 @@ import AutoFocusPlugin from '../../Plugins/AutoFocus/AutoFocusPlugin';
 import { DateTimePlugin } from '../../Plugins/DateTime/DateTimePlugin';
 import { DateTimeNode } from '../../Nodes/DateTimeNode/DateTimeNode';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import PubliusLogo from "../../../../Publius-Transparent-White.png"
+import PubliusLogo from "../../../Assets/Publius-Transparent-White.png"
 
 // WAGMI Hooks
 import { useAccount } from "wagmi";
