@@ -45,8 +45,8 @@ async function addPublication() {
     );
     deployPublication.wait();
 
-    // Wait 10 seconds for chain to settle
-    await new Promise(resolve => setTimeout(resolve, 10000));
+    // Wait 5 seconds for chain to settle
+    await new Promise(resolve => setTimeout(resolve, 5000));
     const publicationAddress = await factory.getPublicationAddress(publicationId);
 
     const contracts: Record<ContractName, Contract> = ({
@@ -78,68 +78,6 @@ async function addPublication() {
     console.info(`Contract info updated in scroll-contract-info.json`);
     console.info("Publication Contract Address: ", publicationAddress);
 
-    console.log("Adding content to publication...");
-
-    const publication = await ethers.getContractAt(
-        "Publius",
-        publicationAddress,
-        author
-    ) as Publius;
-
-
-    // Wait 10 seconds for the chain to settle
-    await new Promise(resolve => setTimeout(resolve, 10000));
-
-    // Encode devdocs content and send to contract 
-    devdocs.sections.forEach(async(section, sectionIndex) => {
-        const nonce = await ethers.provider.getTransactionCount(author.address) + 1;
-
-        const encodedSection = ethers.utils.defaultAbiCoder.encode(
-            ["string", "string", "uint256"],
-            [section.sectionName, section.sectionImage, section.sectionId]
-        );
-
-        const encodedChapters = ethers.utils.defaultAbiCoder.encode(
-          [
-              "string[]",
-              "string[]", 
-              "uint256[]",
-          ],
-          [
-            section.chapters.flatMap(chapter => chapter.chapterName),
-            section.chapters.flatMap(chapter => chapter.chapterImage),
-            section.chapters.flatMap(chapter => chapter.chapterId),
-          ]
-        );
-
-        const encodedPages = ethers.utils.defaultAbiCoder.encode(
-            [
-                "string[][]",
-                "string[][]",
-                "uint256[][]"
-            ],
-            [
-                section.chapters.map(chapter => chapter.pages.map(page => page.pageName)),
-                section.chapters.map(chapter => chapter.pages.map(page => page.pageContent)),
-                section.chapters.map(chapter => chapter.pages.map(page => page.pageId)),
-            ]
-        ); 
-
-        const tx = await publication.addSection(
-            encodedSection,
-            encodedChapters,
-            encodedPages,
-            {
-                nonce,
-            }
-        );
-        tx.wait();
-        console.log(`Section ${section.sectionId} added to publication!}`)
-        // wait for 10 seconds before adding next section
-        await new Promise(resolve => setTimeout(resolve, 20000));
-    });
-
-    publication.mint(3);
 
 
 

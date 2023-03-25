@@ -60,6 +60,39 @@ contract Publius is
 		string pageContent;
 	}
 
+    event SectionAdded(
+        uint256 sectionId,
+        string sectionName,
+        string sectionImage,
+        uint256[] chapterIds
+    );
+    event ChapterAdded(
+        uint256 chapterId,
+        string chapterName,
+        string chapterImage,
+        uint256[] pageIds
+    );
+    event PageAdded(
+        uint256 pageId,
+        string pageName,
+        string pageContent
+    );
+    event SectionModified(
+        uint256 sectionId,
+        string sectionName,
+        string sectionImage
+    );
+    event ChapterModified(
+        uint256 chapterId,
+        string chapterName,
+        string chapterImage,
+    );
+    event PageModified(
+        uint256 pageId,
+        string pageName,
+        string pageContent
+    );
+
 	/// @notice Initialize the contract
 	/// @param _publicationAuthorAddress The author of the publication
 	/// @param _publicationName The name of the publication
@@ -156,6 +189,8 @@ contract Publius is
                 addChapter(newSection.sectionId, _chapterNames[i], _chapterImages[i], _chapterIds[i], _pageNames[i], _pageContent[i], _pageIds[i]);
         }
         sectionCount++;
+
+        emit SectionAdded(_sectionId, _sectionName, _sectionImage, _chapterIds);
     }
 
     /**
@@ -176,6 +211,7 @@ contract Publius is
         section.sectionName = _newSectionName;
         section.sectionImage = _newSectionImage;
 
+        emit SectionModified(_sectionId, _newSectionName, _newSectionImage);
     }
 
     /**
@@ -212,6 +248,8 @@ contract Publius is
         for (uint256 i = 0; i < _pageNames.length; i++) {
             addPage(chapter.chapterId, _pageNames[i], _pageContent[i], _pageIds[i]);
         }
+
+        emit ChapterAdded(_chapterId, _chapterName, _chapterImage, _pageIds);
     }
 
     /**
@@ -231,6 +269,8 @@ contract Publius is
         // Update the chapter's data
         chapter.chapterName = _newChapterName;
         chapter.chapterImage = _newChapterImage;
+
+        emit ChapterModified(_chapterId, _newChapterName, _newChapterImage);
     }
 
 
@@ -258,6 +298,8 @@ contract Publius is
             _pageContent
         ));
         chapter.pageIds.push(_pageId);
+
+        emit PageAdded(_chapter, _pageId, _pageName, _pageContent);
     }
 
     /**
@@ -280,6 +322,8 @@ contract Publius is
         // Update the page's data
         chapter.pages[_pageId].pageName = _newPageName;
         chapter.pages[_pageId].pageContent = _newPageContent;
+
+        emit PageModified(_chapterId, _pageId, _newPageName, _newPageContent);
     }
 
     /**
