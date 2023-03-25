@@ -36,9 +36,9 @@
           "type": "string[]"
         },
         {
-          "internalType": "string[]",
+          "internalType": "uint256[]",
           "name": "_pageIds",
-          "type": "string[]"
+          "type": "uint256[]"
         }
       ],
       "name": "addChapter",
@@ -64,9 +64,9 @@
           "type": "string"
         },
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "_pageId",
-          "type": "string"
+          "type": "uint256"
         }
       ],
       "name": "addPage",
@@ -101,57 +101,47 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_chapter",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_pageId",
+          "name": "chapterId",
           "type": "uint256"
         }
       ],
-      "name": "getPage",
+      "name": "chapters",
       "outputs": [
         {
           "internalType": "string",
-          "name": "pageName",
+          "name": "",
           "type": "string"
         },
         {
-          "internalType": "string",
-          "name": "pageId",
-          "type": "string"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         },
         {
           "internalType": "string",
-          "name": "pageContent",
+          "name": "",
           "type": "string"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "costToMint",
+      "outputs": [
         {
-          "internalType": "address",
-          "name": "_publicationAuthor",
-          "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "_publicationName",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_publicationCoverImage",
-          "type": "string"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
-      "name": "initialize",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -168,13 +158,211 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "minter",
+          "type": "address"
+        }
+      ],
+      "name": "minterOwnedTokens",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_chapterId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_newChapterName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_newChapterImage",
+          "type": "string"
+        }
+      ],
+      "name": "modifyChapter",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_chapterId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_pageId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_newPageName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_newPageContent",
+          "type": "string"
+        }
+      ],
+      "name": "modifyPage",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_sectionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_newSectionName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_newSectionImage",
+          "type": "string"
+        }
+      ],
+      "name": "modifySection",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
-      "name": "tokenURI",
+      "name": "publicationAuthor",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "publicationAuthorName",
       "outputs": [
         {
           "internalType": "string",
           "name": "",
           "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "publicationCoverImage",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "publicationName",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "sectionCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "sectionId",
+          "type": "uint256"
+        }
+      ],
+      "name": "sections",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenIdToMinter",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",

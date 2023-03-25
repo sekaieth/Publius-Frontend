@@ -85,7 +85,7 @@ contract Publius is
     event ChapterModified(
         uint256 chapterId,
         string chapterName,
-        string chapterImage,
+        string chapterImage
     );
     event PageModified(
         uint256 pageId,
@@ -299,7 +299,7 @@ contract Publius is
         ));
         chapter.pageIds.push(_pageId);
 
-        emit PageAdded(_chapter, _pageId, _pageName, _pageContent);
+        emit PageAdded(_pageId, _pageName, _pageContent);
     }
 
     /**
@@ -323,7 +323,7 @@ contract Publius is
         chapter.pages[_pageId].pageName = _newPageName;
         chapter.pages[_pageId].pageContent = _newPageContent;
 
-        emit PageModified(_chapterId, _pageId, _newPageName, _newPageContent);
+        emit PageModified(_pageId, _newPageName, _newPageContent);
     }
 
     /**

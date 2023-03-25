@@ -2,20 +2,17 @@ import React, { useState, useEffect } from "react";
 import "./Reader.css";
 import { ethers } from "ethers";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useContractRead, useAccount, useNetwork } from "wagmi";
-import { usePubliusTokenUri } from "../../generated"
-import PubliusLogo from "../../../../Publius-Transparent-White.png";
-import { Publius__factory } from "../../../../contracts/typechain-types";
-import hardhatAddresses from "../../../../contracts/hardhat-contract-info.json";
-import scrollAddresses from "../../../../contracts/scroll-contract-info.json";
+import { useAccount, useNetwork } from "wagmi";
+import { usePubliusTokenUri } from "../../Types/WAGMI/generated"
+import PubliusLogo from "../../../Assets/Publius-Transparent-White.png";
+import scrollAddresses from "../../scroll-contract-info.json";
 import { 
     Publication, 
     Section,
     Chapter,
     Page,
-} from '../../types';
+} from '../../Types/types';
 import ReactMarkdown from 'react-markdown';
-
 // Reader component
 export const Reader = () => {
     // State management
@@ -27,7 +24,6 @@ export const Reader = () => {
     const { chain, chains } = useNetwork();
 
     // Get Publius contract addresses
-    const hardhatPublius = hardhatAddresses.Publius.address.substring(2);
     const scrollPublius = scrollAddresses.Publius.address.substring(2);
 
     // Fetch publication data using the Publius token URI
