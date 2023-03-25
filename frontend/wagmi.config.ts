@@ -1,5 +1,5 @@
 import { defineConfig } from '@wagmi/cli';
-import { PubliusFactory__factory, Publius__factory } from '../contracts/typechain-types';
+import { PubliusFactory__factory, Publius__factory } from './src/Types/Contract';
 import { react } from '@wagmi/cli/plugins';
 
 export default defineConfig({
