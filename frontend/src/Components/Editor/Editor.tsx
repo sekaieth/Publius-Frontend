@@ -3,12 +3,10 @@ import { useEffect, MouseEvent } from 'react';
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
-import { TreeView } from '@lexical/react/LexicalTreeView';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import './Editor.css';
 import TreeViewPlugin from '../../Plugins/Treeview/TreeviewPlugin';
