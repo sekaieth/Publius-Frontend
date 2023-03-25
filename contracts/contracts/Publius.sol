@@ -413,6 +413,18 @@ contract Publius is
         return false;
     }
 
+    /**
+     * @notice Withdraw ETH from the contract
+     * @param _amount The amount of ETH to withdraw
+     */
+    function withdraw(uint256 _amount) public onlyOwner {
+        require(_amount > 0, "Publius: Withdraw amount must be greater than 0");
+        require(address(this).balance >= _amount, "Publius: Insufficient contract balance");
+
+        (bool success, ) = publicationAuthor.call{value: _amount}("");
+        require(success, "Publius: ETH withdrawal failed");
+    }
+
 
     /**
      * @dev Get the token URI

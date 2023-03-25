@@ -16,30 +16,38 @@ import {
 } from '../../types';
 import ReactMarkdown from 'react-markdown';
 
+// Reader component
 export const Reader = () => {
+    // State management
     const [selectedPage, setSelectedPage] = useState<Page>();
     const [publication, setPublication] = useState<Publication>();
 
+    // Hooks for fetching account and network data
     const { address, isDisconnected } = useAccount();
     const { chain, chains } = useNetwork();
 
+    // Get Publius contract addresses
     const hardhatPublius = hardhatAddresses.Publius.address.substring(2);
     const scrollPublius = scrollAddresses.Publius.address.substring(2);
 
+    // Fetch publication data using the Publius token URI
     const { data, isError, error } = usePubliusTokenUri ({
         address: `0x${scrollPublius}`,
         args: [ethers.BigNumber.from(1)],
     });
 
+    // Handle page click event
     function handlePageClick(page: Page) {
         setSelectedPage(page);
     }
 
+    // Toggle collapsible section
     function toggleCollapse(event: React.MouseEvent) {
         const content = (event.currentTarget as HTMLElement).nextElementSibling as HTMLElement;
         content.style.display = content.style.display === "block" ? "none" : "block";
     }
 
+    // Update publication state when data is fetched
     useEffect(() => {
         if (data) {
             const encodedPublication = data.substring(29);
@@ -49,7 +57,9 @@ export const Reader = () => {
         }
     }, [data]);
 
+    // Render the component
     if(isDisconnected) {
+        // Render ConnectButton and message when wallet is not connected
         return (
             <section className="readerContainer">
                 <ConnectButton />
@@ -61,6 +71,7 @@ export const Reader = () => {
         )
     } 
     if(isError) {
+        // Render error message when an error occurs
         return (
               <section className="readerContainer">
                 <ConnectButton />
@@ -73,6 +84,7 @@ export const Reader = () => {
         )
     }
     else return (
+      // Render the main reader UI
       <section className="readerContainer">
         <ConnectButton />
         <img src={PubliusLogo}></img>
