@@ -52,7 +52,7 @@ export const Reader = () => {
             <section className="readerContainer">
                 <ConnectButton />
                 <img src={PubliusLogo}></img>
-                <section className="readerBox">
+                <section className="readerBoxBig">
                     <h1>Please connect your wallet to continue</h1>
                 </section>
             </section>

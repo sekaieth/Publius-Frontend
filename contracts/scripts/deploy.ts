@@ -11,7 +11,6 @@ interface Contract {
     address: string;
 }
 async function deployPublius() {
-
     const [deployer, author] = await ethers.getSigners();
     const network = await ethers.provider.getNetwork();
 
@@ -28,19 +27,22 @@ async function deployPublius() {
     
     const contracts: Record<ContractName, Contract> = ({
         PubliusImpl: {
-            network: network.name === 'unknown' ? 'hardhat' : network.name,
+            network: "scroll",
             address: publiusInstance.address,
         },
         PubliusFactory: {
-            network: network.name === 'unknown' ? 'hardhat' : network.name,
+            network: "scroll",
             address: factory.address,
         }
     });
 
+    console.log(`Publius Implemenatation Block Explorer URL: https://blockscout.scroll.io/address/${publiusInstance.address}`)
+    console.log(`PubliusFactory Block explorer URL: https://blockscout.scroll.io/address/${factory.address}`);
+
     // Stringify the Contracts Map and output to the "addresses" file
     try {
     fs.writeFileSync(
-        `${network.name === 'unknown' ? 'hardhat' : network.name}-contract-info.json`,
+        `scroll-contract-info.json`,
         JSON.stringify(contracts, null, 2), 
         'utf-8');
     } catch (err) {

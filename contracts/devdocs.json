@@ -1,7 +1,7 @@
 {
     "name": "Publius",
     "author": "s3kai.eth",
-    "image": "https://example.com/publius-cover-image.jpg",
+    "image": "https://github.com/sekaieth/Publius/blob/dev/Publius-Transparent.png?raw=true",
     "sections": [
         {
             "sectionId": 1,
@@ -16,17 +16,17 @@
                         {
                             "pageId": 1,
                             "pageName": "Introduction",
-                            "pageContent": "This smart contract implements a token-based publishing platform that allows authors to publish their works as NFTs. The contract provides a way for readers to purchase these NFTs and access the content associated with them."
+                            "pageContent": "The Publius smart contract is a publication management system that allows authors to create and manage publications on the blockchain. The contract is implemented in Solidity, version 0.8.18, and uses the ERC721EnumerableUpgradeable contract from the OpenZeppelin library.\\n\\nThe contract has the following features:\\n\\n1 - Minting of tokens: The contract allows authors to mint tokens that represent ownership of a section, chapter, or page in the publication.\\n\\n2 - Publication management: The contract allows authors to create, modify, and delete sections, chapters, and pages in the publication. Each section can contain multiple chapters, and each chapter can contain multiple pages.\\n\\n3 - Token ownership tracking: The contract tracks the ownership of each token and how many tokens each minter has minted.\\n\\n4 - Metadata storage: The contract stores metadata about the publication, such as the name of the publication, the author of the publication, the cover image of the publication, and the cost to mint a token.\\n\\n5 - Access control: The contract uses the OwnableUpgradeable contract from the OpenZeppelin library to restrict access to certain functions to the owner of the contract.\\n\\n6 - Upgradability: The contract uses the Initializable contract from the OpenZeppelin library to allow for upgradability.\\n\\n\\nThe contract is authored by s3kai.eth and is licensed under the MIT License."
                         },
                         {
                             "pageId": 2,
                             "pageName": "Functions",
-                            "pageContent": "The contract includes functions for creating publications, adding sections and chapters, minting NFTs, and managing access to the content. These functions are designed to be flexible and allow for a wide variety of publishing use cases."
+                            "pageContent": "The Publius smart contract includes the following functionality:\\n\\n- `initialize()`: Initializes a new publication with a unique ID, author address, author name, publication name, cover image, and cost to mint.\\n`createSection()`: Creates a new section within a publication.\\n`createChapter()`: Creates a new chapter within a section.\\n- `createPage()`: Creates a new page within a chapter.\\n- `isChapterInSection()`: Checks if a chapter is within a section's chapters array.\\n-`tokenURI()`: Returns the token URI for a given token ID."
                         },
                         {
                             "pageId": 3,
                             "pageName": "Token URI Format",
-                            "pageContent": "The contract uses a specific JSON format for the token URI that includes information about the publication, sections, chapters, and pages. This format allows for easy integration with third-party tools and services."
+                            "pageContent": "The contract uses a specific JSON format for the token URI that includes information about the publication, sections, chapters, and pages. This format allows for easy integration with third-party tools and services.\\n\\n![JSON Standard](https://bafkreihmoeoddcilguwf3yetqfcmlsboinet6xohjtuz3sc5vmn5673g4y.ipfs.nftstorage.link/)"
                         }
                     ]
                 },
@@ -73,58 +73,43 @@
             "chapters": [
                 {
                     "chapterId": 4,
-                    "chapterName": "Constructor",
+                    "chapterName": "Functions",
                     "chapterImage": "",
                     "pages": [
                         {
                             "pageId": 8,
                             "pageName": "initialize",
-                            "pageContent": "This function is called during the contract's initialization to set up the initial configuration of the contract. It is called by the `createPublication` function of the `PubliusFactory` contract, which passes in the necessary parameters.  The function sets the publication ID, author address and name, publication name, cover image, and cost to mint.  It also sets the contract's owner to the caller's address using the `transferOwnership` function from the `Ownable` contract.  This function can only be called once during the contract's lifetime."
+                            "pageContent": "## `initialize`\\n\\n The `initialize` function is a public function that is used to initialize a new publication. It takes in several parameters including the publication ID, the address of the publication author, the name of the publication author, the name of the publication, the cover image for the publication, and the cost to mint a new token.\\n\\n To use this function, simply call it with the required parameters. It can only be called once for each publication ID, so make sure that you pass in the correct ID when calling this function."
                         },
                         {
                             "pageId": 9,
                             "pageName": "addSection",
-                            "pageContent": "This function allows the owner of the contract to add a new section to the publication. It takes the section name and image as parameters, generates a new section ID, and adds the new section to the sections mapping. The addChapter and addPage functions can then be used to add chapters and pages to the section."
+                            "pageContent": "## `addSection`\\n\\n The `addSection` function is a public function that is used to add a new section to the publication. It takes in the name of the new section and the image associated with the section.\\n\\n To use this function, you must first have initialized a publication using the initialize function. Once the publication has been initialized, you can call the addSection function to add a new section to the publication."
                         },
                         {
                             "pageId": 10,
                             "pageName": "addChapter",
-                            "pageContent": "This function allows the owner of the contract to add a new chapter to a section. It takes the section ID, chapter name and image as parameters, generates a new chapter ID, and adds the new chapter to the chapters mapping within the specified section. The addPage function can then be used to add pages to the chapter."
+                            "pageContent": "## `addChapter`\\n\\n The addChapter function is a public function that is used to add a new chapter to a section within the publication. It takes in the ID of the section that the chapter belongs to, the name of the chapter, and the image associated with the chapter.\\n\\n To use this function, you must first have added a section to the publication using the addSection function. Once a section has been added, you can call the addChapter function to add a new chapter to that section."
                         },
                         {
                             "pageId": 11,
                             "pageName": "addPage",
-                            "pageContent": "This function allows the owner of the contract to add a new page to a chapter. It takes the section ID, chapter ID, page name, and page content as parameters, generates a new page ID, and adds the new page to the pages mapping within the specified chapter."
+                            "pageContent": "## `addPage`\\n\\n The `addPage` function is a public function that is used to add a new page to a chapter within the publication. It takes in the ID of the chapter that the page belongs to, the name of the page, and the content of the page.\\n\\n To use this function, you must first have added a chapter to a section within the publication using the addChapter function. Once a chapter has been added, you can call the addPage function to add a new page to that chapter."
                         },
                         {
                             "pageId": 12,
-                            "pageName": "getPublicationDetails",
-                            "pageContent": "This function returns the details of the publication, including the publication name, author name, and cover image. It also returns the number of sections, chapters, and pages in the publication."
+                            "pageName": "getPage",
+                            "pageContent": "## `getPage`\\n\\n The `getPage` function is a public function that is used to retrieve the content of a page within the publication. It takes in the ID of the page that you want to retrieve, and returns the name and content of the page.\\n\\n To use this function, you must first have added a page to a chapter within the publication using the addPage function. Once a page has been added, you can call the getPage function to retrieve the content of that page."
                         },
                         {
                             "pageId": 13,
-                            "pageName": "getSectionDetails",
-                            "pageContent": "This function returns the details of a section, including the section name, image, and number of chapters in the section."
+                            "pageName": "isChapterInSection",
+                            "pageContent": "## `isChapterInSection`\\n\\n The isChapterInSection function is an internal view function that is used to check if a given chapter belongs to a specific section within the publication. It takes in the ID of the section and the ID of the chapter.\\n\\n This function is used internally by other functions within the contract and does not need to be called directly."
                         },
                         {
                             "pageId": 14,
-                            "pageName": "getChapterDetails",
-                            "pageContent": "This function returns the details of a chapter, including the chapter name, image, and number of pages in the chapter."
-                        },
-                        {
-                            "pageId": 15,
-                            "pageName": "getPageDetails",
-                            "pageContent": "This function returns the details of a page, including the page name and content."
-                        },
-                        {
-                            "pageId": 16,
-                            "pageName": "isChapterInSection",
-                            "pageContent": "This function checks if a chapter is within a section's chapters array. It takes the section ID and chapter ID as parameters, and returns true if the chapter is in the section, false otherwise."
-                        },
-                        {
-                            "pageId": 17,
                             "pageName": "tokenURI",
-                            "pageContent": "This function returns the token URI for a given token ID. It constructs a JSON structure containing the publication details, sections, chapters, and pages, and base64 encodes the JSON string. The resulting data URI can then be used to retrieve the token metadata."
+                            "pageContent": "## `tokenURI`\\n\\n The tokenURI function is a public view function that is used to retrieve the token URI for a given token ID. The token URI is a JSON object that contains all of the publication details, including the sections, chapters, and pages.\\n\\n To use this function, simply call it with the ID of the token that you want to retrieve the URI for. If the token does not exist, the function will throw an error. If the token exists, the function will return the token URI in a base64-encoded string format."
                         }
                     ]
                 }
@@ -141,7 +126,7 @@
                     "chapterImage": "",
                     "pages": [
                         {
-                            "pageId": 18,
+                            "pageId": 15,
                             "pageName": "PubliusBeacon",
                             "pageContent": "This contract is the implementation beacon used by the PubliusFactory to deploy new instances of the Publius contract. It is a minimal implementation of the UpgradeableBeacon contract provided by OpenZeppelin, and is owned by the owner of the PubliusFactory contract."
                         }
@@ -153,7 +138,7 @@
                     "chapterImage": "",
                     "pages": [
                         {
-                            "pageId": 19,
+                            "pageId": 16,
                             "pageName": "update",
                             "pageContent": "This function is used to upgrade the implementation contract that the beacon is pointing to. Only the owner of the PubliusBeacon contract is allowed to call this function. It upgrades the implementation to the new implementation address passed as an argument and updates the publiusImpl variable to reflect the new implementation."
                         }
@@ -165,7 +150,7 @@
                     "chapterImage": "",
                     "pages": [
                         {
-                            "pageId": 20,
+                            "pageId": 17,
                             "pageName": "implementation",
                             "pageContent": "This function returns the current implementation contract address that the beacon is pointing to."
                         }
@@ -184,7 +169,7 @@
                     "chapterImage": "",
                     "pages": [
                         {
-                            "pageId": 21,
+                            "pageId": 18,
                             "pageName": "PubliusFactory",
                             "pageContent": "This contract is the factory contract used to create new instances of the Publius contract. It creates a new PubliusBeacon contract to use as the implementation beacon, and deploys new instances of the Publius contract using this beacon."
                         }
@@ -196,7 +181,7 @@
                     "chapterImage": "",
                     "pages": [
                         {
-                            "pageId": 22,
+                            "pageId": 19,
                             "pageName": "createPublication",
                             "pageContent": "This function is used to create a new instance of the Publius contract. It takes the publication ID, author address and name, publication name, cover image, and cost to mint as arguments, and deploys a new Publius contract using the implementation beacon. The contract address is stored in the publications mapping with the publication ID as the key."
                         }
@@ -208,7 +193,7 @@
                     "chapterImage": "",
                     "pages": [
                         {
-                            "pageId": 23,
+                            "pageId": 20,
                             "pageName": "getPublicationAddress",
                             "pageContent": "This function takes a publication ID as an argument and returns the contract address of the corresponding Publius contract. If the publication does not exist, the function will return the zero address."
                         }
@@ -220,7 +205,7 @@
                     "chapterImage": "",
                     "pages": [
                         {
-                            "pageId": 24,
+                            "pageId": 21,
                             "pageName": "getBeacon",
                             "pageContent": "This function returns the address of the implementation beacon used by the factory to deploy new Publius contracts."
                         }
@@ -232,7 +217,7 @@
                     "chapterImage": "",
                     "pages": [
                         {
-                            "pageId": 25,
+                            "pageId": 22,
                             "pageName": "getImplementation",
                             "pageContent": "This function returns the current implementation contract address that the beacon is pointing to."
                         }

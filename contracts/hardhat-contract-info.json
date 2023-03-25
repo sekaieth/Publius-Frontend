@@ -1,14 +1,14 @@
 {
   "PubliusImpl": {
     "network": "hardhat",
-    "address": "0xFD471836031dc5108809D173A067e8486B9047A3"
+    "address": "0x6562987403eE9370Cf49Ad69cFbE768Bee04457E"
   },
   "PubliusFactory": {
     "network": "hardhat",
-    "address": "0xcbEAF3BDe82155F56486Fb5a1072cb8baAf547cc"
+    "address": "0x40244a0882C0247a6ba3438a6033c6f2ef59DE80"
   },
   "Publius": {
     "network": "hardhat",
-    "address": "0x304f769D386c0c787674588D52448EEe6d550b9f"
+    "address": ""
   }
 }
