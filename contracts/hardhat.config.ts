@@ -18,6 +18,11 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://127.0.0.1:8545",
     },
+    scroll: {
+      url: process.env.SCROLL_URI || "",
+      accounts: 
+        process.env.SCROLL_PRIVKEY !== undefined ? [process.env.SCROLL_PRIVKEY] : [],
+    }
   },
 };
 

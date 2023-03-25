@@ -5,6 +5,7 @@ import hardhatAddresses from "../hardhat-contract-info.json";
 import devdocs from "../devdocs.json";
 import * as fs from "fs";
 import { Section } from "../interfaces";
+import scrollAddresses from "../scroll-contract-info.json";
 
 type ContractName =
     | 'PubliusImpl'
@@ -27,12 +28,13 @@ async function addPublication() {
 
     [author] = await ethers.getSigners();
     const factory =  await ethers.getContractAt(
-        PubliusFactory__factory.abi,
-        hardhatAddresses.PubliusFactory.address,
+        'PubliusFactory',
+        scrollAddresses.PubliusFactory.address,
         author 
     ) as PubliusFactory;
 
     const publicationId = (await factory.publicationCount()).toNumber() + 1;
+    console.log("Deploying a new publication...ID = ", publicationId)
     const deployPublication = await factory.createPublication(
         publicationId, 
         author.address, 
@@ -43,19 +45,21 @@ async function addPublication() {
     );
     deployPublication.wait();
 
+    // Wait 10 seconds for chain to settle
+    await new Promise(resolve => setTimeout(resolve, 10000));
     const publicationAddress = await factory.getPublicationAddress(publicationId);
 
     const contracts: Record<ContractName, Contract> = ({
         PubliusImpl: {
-            network: network.name === 'unknown' ? 'hardhat' : network.name,
-            address: hardhatAddresses.PubliusImpl.address,
+            network: "scroll",
+            address: scrollAddresses.PubliusImpl.address,
         },
         PubliusFactory: {
-            network: network.name === 'unknown' ? 'hardhat' : network.name,
-            address: hardhatAddresses.PubliusFactory.address,
+            network: "scroll",
+            address: scrollAddresses.PubliusFactory.address,
         },
         Publius: {
-            network: network.name === 'unknown' ? 'hardhat' : network.name,
+            network: "scroll",
             address: publicationAddress,
         }
     });
@@ -63,15 +67,16 @@ async function addPublication() {
     console.log("Deployed a new publication!");
     // Stringify the Contracts Map and output to the "addresses" file
     try {
-    fs.writeFileSync(
-        `${network.name === 'unknown' ? 'hardhat' : network.name}-contract-info.json`,
-        JSON.stringify(contracts, null, 2), 
-        'utf-8');
+        fs.writeFileSync(
+            `scroll-contract-info.json`,
+            JSON.stringify(contracts, null, 2), 
+            'utf-8'
+        );
     } catch (err) {
     console.error(err);
     } 
-    console.info(`Contract info updated in ${network.name === 'unknown' ? 'hardhat' : network.name}-contract-info.json`);
-    console.info("Publication Contract Address: ", await factory.getPublicationAddress(publicationId));
+    console.info(`Contract info updated in scroll-contract-info.json`);
+    console.info("Publication Contract Address: ", publicationAddress);
 
     console.log("Adding content to publication...");
 
@@ -82,8 +87,12 @@ async function addPublication() {
     ) as Publius;
 
 
+    // Wait 10 seconds for the chain to settle
+    await new Promise(resolve => setTimeout(resolve, 10000));
+
     // Encode devdocs content and send to contract 
     devdocs.sections.forEach(async(section, sectionIndex) => {
+        const nonce = await ethers.provider.getTransactionCount(author.address) + 1;
 
         const encodedSection = ethers.utils.defaultAbiCoder.encode(
             ["string", "string", "uint256"],
@@ -119,12 +128,18 @@ async function addPublication() {
         const tx = await publication.addSection(
             encodedSection,
             encodedChapters,
-            encodedPages
+            encodedPages,
+            {
+                nonce,
+            }
         );
         tx.wait();
+        console.log(`Section ${section.sectionId} added to publication!}`)
+        // wait for 10 seconds before adding next section
+        await new Promise(resolve => setTimeout(resolve, 20000));
     });
 
-    publication.mint(1);
+    publication.mint(3);
 
 
 

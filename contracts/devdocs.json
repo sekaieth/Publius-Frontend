@@ -16,17 +16,17 @@
                         {
                             "pageId": 1,
                             "pageName": "Introduction",
-                            "pageContent": "This smart contract implements a token-based publishing platform that allows authors to publish their works as NFTs. The contract provides a way for readers to purchase these NFTs and access the content associated with them."
+                            "pageContent": "The Publius smart contract is a publication management system that allows authors to create and manage publications on the blockchain. The contract is implemented in Solidity, version 0.8.18, and uses the ERC721EnumerableUpgradeable contract from the OpenZeppelin library.\\n\\nThe contract has the following features:\\n\\n1 - Minting of tokens: The contract allows authors to mint tokens that represent ownership of a section, chapter, or page in the publication.\\n2 - Publication management: The contract allows authors to create, modify, and delete sections, chapters, and pages in the publication. Each section can contain multiple chapters, and each chapter can contain multiple pages.\\n3 - Token ownership tracking: The contract tracks the ownership of each token and how many tokens each minter has minted.\\n4 - Metadata storage: The contract stores metadata about the publication, such as the name of the publication, the author of the publication, the cover image of the publication, and the cost to mint a token.\\n5 - Access control: The contract uses the OwnableUpgradeable contract from the OpenZeppelin library to restrict access to certain functions to the owner of the contract.\\n6 - Upgradability: The contract uses the Initializable contract from the OpenZeppelin library to allow for upgradability.\\n\\nThe contract is authored by SΞkai and is licensed under the MIT License."
                         },
                         {
                             "pageId": 2,
                             "pageName": "Functions",
-                            "pageContent": "The contract includes functions for creating publications, adding sections and chapters, minting NFTs, and managing access to the content. These functions are designed to be flexible and allow for a wide variety of publishing use cases."
+                            "pageContent": "The Publius smart contract includes the following functionality:\\n\\n- `initialize()`: Initializes a new publication with a unique ID, author address, author name, publication name, cover image, and cost to mint.\\n`createSection()`: Creates a new section within a publication.\\n`createChapter()`: Creates a new chapter within a section.\\n- `createPage()`: Creates a new page within a chapter.\\n- `isChapterInSection()`: Checks if a chapter is within a section's chapters array.\\n-`tokenURI()`: Returns the token URI for a given token ID."
                         },
                         {
                             "pageId": 3,
                             "pageName": "Token URI Format",
-                            "pageContent": "The contract uses a specific JSON format for the token URI that includes information about the publication, sections, chapters, and pages. This format allows for easy integration with third-party tools and services."
+                            "pageContent": "The contract uses a specific JSON format for the token URI that includes information about the publication, sections, chapters, and pages. This format allows for easy integration with third-party tools and services.\\n\\n[JSON Standard](https://bafkreihmoeoddcilguwf3yetqfcmlsboinet6xohjtuz3sc5vmn5673g4y.ipfs.nftstorage.link/)"
                         }
                     ]
                 },
