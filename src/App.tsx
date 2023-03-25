@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React from 'react';
 import "./index.css";
 import { Editor } from './Components/Editor/Editor';
 import { Reader } from './Components/Reader/Reader';
@@ -14,7 +14,6 @@ import { getDefaultWallets,
   darkTheme } from '@rainbow-me/rainbowkit';
 
 const { VITE_SCROLL_API } = import.meta.env; 
-console.log(import.meta.env.VITE_SCROLL_API); // Configure the chains and providers for WAGMI
 
 
 const { chains, provider } = configureChains(
@@ -48,17 +47,7 @@ const client = createClient({
 
 
 function App() {
- const [path, setPath] = useState(window.location.pathname);
-
-  useEffect(() => {
-    const handlePathChange = () => {
-      setPath(window.location.pathname);
-    };
-    window.addEventListener('popstate', handlePathChange);
-    return () => {
-      window.removeEventListener('popstate', handlePathChange);
-    };
-  }, []);
+  const path = window.location.pathname;
   return (
     <WagmiConfig client={client} >
       <RainbowKitProvider chains={chains} theme={darkTheme({

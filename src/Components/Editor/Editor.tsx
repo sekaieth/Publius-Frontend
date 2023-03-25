@@ -67,7 +67,7 @@ export function Editor() {
         <ConnectButton />
         { address && !isDisconnected && <a href="/Reader"><button onClick={handleClick}>Read a Publication</button></a> }
       </div>
-      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center"}}>
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
         <img src={PubliusLogo}></img>
       </div>
     <LexicalComposer initialConfig={initialConfig}>

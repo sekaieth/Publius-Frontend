@@ -71,7 +71,7 @@ export const Reader = () => {
         return (
               <section className="readerContainer">
                 <ConnectButton />
-                <img src={PubliusLogo}></img>
+                <img style={{ width: "75%" }} src={PubliusLogo}></img>
                 <section className="readerBoxBig">
                     <h1>There was an error loading the publication</h1>
                     {error && error.message}         

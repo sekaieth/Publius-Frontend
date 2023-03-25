@@ -160,3 +160,7 @@ button {
   user-select: none;
   white-space: nowrap;
 }
+
+img {
+  max-width: 100%;
+}

@@ -194,3 +194,6 @@ p {
     color: #000;
     max-width: 90%;
 }
+img {
+    max-width: 75%;
+}
