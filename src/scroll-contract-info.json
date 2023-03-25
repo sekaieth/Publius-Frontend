@@ -1,0 +1,14 @@
+{
+  "PubliusImpl": {
+    "network": "scroll",
+    "address": "0x04F3CD698ED6DB91c442A8D72EbED0e7057994a7"
+  },
+  "PubliusFactory": {
+    "network": "scroll",
+    "address": "0xF2535074C8295DC0DB0D3F602c9D9A1d41148683"
+  },
+  "Publius": {
+    "network": "scroll",
+    "address": "0x7daDbcd8f99124E1f28A1edFD4c41e410F96Af78"
+  }
+}
