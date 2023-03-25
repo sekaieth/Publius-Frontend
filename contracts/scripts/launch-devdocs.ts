@@ -22,19 +22,28 @@ interface EncodedData {
     encodedChapters: string;
     encodedPages: string;
 }
+
+// Function to add a new publication
 async function addPublication() {
+    // Get the current network
     const network = await ethers.provider.getNetwork();
     let author: SignerWithAddress;
 
+    // Get the author's signer
     [author] = await ethers.getSigners();
+    
+    // Get the instance of PubliusFactory contract
     const factory =  await ethers.getContractAt(
         'PubliusFactory',
         scrollAddresses.PubliusFactory.address,
         author 
     ) as PubliusFactory;
 
+    // Calculate the publication ID
     const publicationId = (await factory.publicationCount()).toNumber() + 1;
     console.log("Deploying a new publication...ID = ", publicationId)
+
+    // Create a new publication using the factory
     const deployPublication = await factory.createPublication(
         publicationId, 
         author.address, 
@@ -45,10 +54,13 @@ async function addPublication() {
     );
     deployPublication.wait();
 
-    // Wait 5 seconds for chain to settle
+    // Wait 5 seconds for the chain to settle
     await new Promise(resolve => setTimeout(resolve, 5000));
+    
+    // Get the address of the newly created publication
     const publicationAddress = await factory.getPublicationAddress(publicationId);
 
+    // Update the contract addresses
     const contracts: Record<ContractName, Contract> = ({
         PubliusImpl: {
             network: "scroll",
@@ -65,7 +77,8 @@ async function addPublication() {
     });
 
     console.log("Deployed a new publication!");
-    // Stringify the Contracts Map and output to the "addresses" file
+
+    // Write the updated contract addresses to the JSON file
     try {
         fs.writeFileSync(
             `scroll-contract-info.json`,
@@ -73,15 +86,12 @@ async function addPublication() {
             'utf-8'
         );
     } catch (err) {
-    console.error(err);
+        console.error(err);
     } 
+
     console.info(`Contract info updated in scroll-contract-info.json`);
     console.info("Publication Contract Address: ", publicationAddress);
-
-
-
-
-
 }
 
+// Execute the addPublication function
 addPublication();
