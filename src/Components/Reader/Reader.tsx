@@ -55,18 +55,6 @@ export const Reader = () => {
     }, [data]);
 
     // Render the component
-    if(isDisconnected) {
-        // Render ConnectButton and message when wallet is not connected
-        return (
-            <section className="readerContainer">
-                <ConnectButton />
-                <img src={PubliusLogo}></img>
-                <section className="readerBoxBig">
-                    <h1>Please connect your wallet to continue</h1>
-                </section>
-            </section>
-        )
-    } 
     if(isError) {
         // Render error message when an error occurs
         return (
