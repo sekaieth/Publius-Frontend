@@ -19,6 +19,7 @@ import PubliusLogo from "../../../Assets/Publius-Transparent-White.png"
 
 // WAGMI Hooks
 import { useAccount } from "wagmi";
+import { useNavigate } from 'react-router-dom';
 
 const theme = {
   // Theme styling goes here
@@ -46,6 +47,7 @@ function onError(error: Error) {
 
 export function Editor() {
 
+  const navigate = useNavigate();
   const { address, isDisconnected } = useAccount();
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -65,7 +67,7 @@ export function Editor() {
     <>
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3%", flexDirection: "column" }}>
         <ConnectButton />
-        { address && !isDisconnected && <a href="/Reader"><button onClick={handleClick}>Read a Publication</button></a> }
+        { address && !isDisconnected && <a href="/Reader"><button onClick={() => navigate("Reader")}>Read a Publication</button></a> }
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
         <img src={PubliusLogo}></img>
