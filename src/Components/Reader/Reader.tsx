@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, Routes, Route } from "react-router-dom";
 import "./Reader.css";
 import { ethers } from "ethers";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -114,7 +115,7 @@ export const Reader = () => {
                                 <ul>
                                 {chapter.pages.map((page) => (
                                     <li key={page.pageId} className="page">
-                                    <a href="#" onClick={() => handlePageClick(page)}>
+                                    <a onClick={() => handlePageClick(page)}>
                                         {page.pageName}
                                     </a>
                                     </li>

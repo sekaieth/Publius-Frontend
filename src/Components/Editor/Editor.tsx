@@ -70,7 +70,7 @@ export function Editor() {
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
         <img src={PubliusLogo}></img>
-        { address && !isDisconnected && <button onClick={() => navigate("/Reader")}>Read a Publication</button> }
+        { <button onClick={() => navigate("/Reader")}>Read a Publication</button> }
       </div>
     <LexicalComposer initialConfig={initialConfig}>
       <section className='editor-container'>
