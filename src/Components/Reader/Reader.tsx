@@ -76,7 +76,7 @@ export const Reader = () => {
         <section className="readerBox">
           <section className="readerHeader">
             {
-                address && publication && ( 
+                publication && ( 
                 <>
                     <h1 >{publication?.name}</h1>
                     Select a page from the table of contents to read it.
@@ -87,7 +87,7 @@ export const Reader = () => {
           <section className="readerContent">
             <section className="readerSidebar">
                 <ul>
-                {address && publication && publication.sections.map((section) => (
+                { publication && publication.sections.map((section) => (
                     <li key={section.sectionId} className="section">
                     <section className="collapsible" onClick={toggleCollapse}>
                         <h3>{section.sectionName}</h3>
