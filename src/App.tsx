@@ -43,19 +43,19 @@ const client = createClient({
 
 function App() {
   return (
-    <HashRouter>
       <WagmiConfig client={client} >
         <RainbowKitProvider chains={chains} theme={darkTheme({
           accentColor: '#000000',
           accentColorForeground: 'white',
           })}>
+        <HashRouter>
           <Routes>
             <Route path="/" element={<Editor />} />
-            <Route path="/Reader" element={<Reader />} />
+            <Route path="Reader" element={<Reader />} />
           </Routes>
+        </HashRouter>
         </RainbowKitProvider>
       </WagmiConfig>
-    </HashRouter>
   );
 }
 
