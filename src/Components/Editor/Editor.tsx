@@ -67,7 +67,7 @@ export function Editor() {
     <>
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3%", flexDirection: "column" }}>
         <ConnectButton />
-        { address && !isDisconnected && <button onClick={() => navigate("Reader")}>Read a Publication</button> }
+        { address && !isDisconnected && <button onClick={() => navigate("/Reader")}>Read a Publication</button> }
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
         <img src={PubliusLogo}></img>
