@@ -2,6 +2,7 @@ import React from 'react';
 import "./index.css";
 import { Editor } from './Components/Editor/Editor';
 import { Reader } from './Components/Reader/Reader';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 // WAGMI
 import { WagmiConfig, createClient, configureChains } from 'wagmi';
 import { hardhat, scrollTestnet } from 'wagmi/chains';
@@ -19,11 +20,6 @@ const { VITE_SCROLL_API } = import.meta.env;
 const { chains, provider } = configureChains(
   [hardhat, scrollTestnet],
   [
-    // jsonRpcProvider({
-    //   rpc: (chain) => ({
-    //     http: 'http://localhost:8545',
-    //   })
-    // }),
     jsonRpcProvider({
       rpc: (chain) => ({
         http: VITE_SCROLL_API,
@@ -45,21 +41,21 @@ const client = createClient({
   provider: provider,
 });
 
-
 function App() {
-  const path = window.location.pathname;
   return (
-    <WagmiConfig client={client} >
-      <RainbowKitProvider chains={chains} theme={darkTheme({
-        accentColor: '#000000',
-        accentColorForeground: 'white',
-        })}>
-        <div>
-          {path === '/' && <Editor />}
-          {path === '/Reader' && <Reader />}
-        </div>
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <HashRouter>
+      <WagmiConfig client={client} >
+        <RainbowKitProvider chains={chains} theme={darkTheme({
+          accentColor: '#000000',
+          accentColorForeground: 'white',
+          })}>
+          <Routes>
+            <Route path="/" element={<Editor />} />
+            <Route path="/Reader" element={<Reader />} />
+          </Routes>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </HashRouter>
   );
 }
 
