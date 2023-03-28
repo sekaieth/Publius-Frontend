@@ -1,4 +1,4 @@
-.readerContainer {
+readerContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -197,3 +197,4 @@ p {
 img {
     max-width: 75%;
 }
+

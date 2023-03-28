@@ -28,7 +28,7 @@ export const Reader = () => {
     const scrollPublius = scrollAddresses.Publius.address.substring(2);
 
     // Fetch publication data using the Publius token URI
-    const { data, isError, error } = usePubliusTokenUri ({
+    const { data, isError, error, isLoading } = usePubliusTokenUri ({
         address: `0x${scrollPublius}`,
         args: [ethers.BigNumber.from(1)],
     });
@@ -54,6 +54,17 @@ export const Reader = () => {
         }
     }, [data]);
 
+    if(isLoading) {
+        return (
+              <section className="readerContainer">
+                <ConnectButton />
+                <img style={{ width: "75%" }} src={PubliusLogo}></img>
+                <section className="readerBoxBig">
+                    <h1>Loading...</h1>
+                </section>
+            </section>
+        )
+    }
     // Render the component
     if(isError) {
         // Render error message when an error occurs
